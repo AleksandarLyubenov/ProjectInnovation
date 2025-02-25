@@ -4,5 +4,16 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
-  m_configObjects: {}
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Aleksander's Scene.unity
+    guid: 0f7173ff81d71f54ea7a147ac01534ed
+  m_configObjects:
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000,
+      guid: 694b63a8484d04a4d9e96d62e5254bc2, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 0fd9f5646a9cc544fbe8114c5d7dfcd9,
+      type: 2}
+    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000,
+      guid: 6a47b038f9a0eb541a6990a95deec4a1, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
+      guid: f9690f7354ae0734bb4e2ba83e7a8c27, type: 2}
