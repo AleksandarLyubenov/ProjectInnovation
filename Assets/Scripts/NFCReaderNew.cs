@@ -12,6 +12,14 @@ public class NfcReader : MonoBehaviour
     private AndroidJavaObject mIntent;
     private string mLastNfcId = "";
 
+    [Header("Character UID Scriptable Objects")]
+    [SerializeField] private NFCTagUID Character1UIDs;
+    [SerializeField] private NFCTagUID Character2UIDs;
+
+    [Header("Character Materials")]
+    [SerializeField] private Material Character1Material;
+    [SerializeField] private Material Character2Material;
+
     void Start()
     {
 #if UNITY_ANDROID
@@ -62,11 +70,44 @@ public class NfcReader : MonoBehaviour
             mLastNfcId = tagIdString;
             Debug.Log("NFC Tag Detected: " + tagIdString);
 
-            // Delete the cube
-            DestroyCube();
+            // Change the cube color based on the detected tag
+            ChangeCubeColor(tagIdString);
         }
 #endif
     }
+
+    void SetCubeMaterial(Material newMaterial)
+    {
+        GameObject cube = GameObject.Find("Cube");
+        if (cube != null)
+        {
+            Renderer cubeRenderer = cube.GetComponent<Renderer>();
+            if (cubeRenderer != null)
+            {
+                cubeRenderer.material = newMaterial;
+            }
+        }
+    }
+
+
+    void ChangeCubeColor(string tagIdString)
+    {
+        if (Character1UIDs.tagUIDs.Contains(tagIdString))
+        {
+            SetCubeMaterial(Character1Material);
+            Debug.Log("Cube color changed to Character 1!");
+        }
+        else if (Character2UIDs.tagUIDs.Contains(tagIdString))
+        {
+            SetCubeMaterial(Character2Material);
+            Debug.Log("Cube color changed to Character 2!");
+        }
+        else
+        {
+            Debug.LogWarning("Tag ID not recognized!");
+        }
+    }
+
 
     void DestroyCube()
     {

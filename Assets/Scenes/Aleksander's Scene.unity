@@ -166,6 +166,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af9a6df6e68f2f24b99d323fde57123d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Character1UIDs: {fileID: 11400000, guid: 19f18730484a9ba46a7c5ecd2bc4b18e, type: 2}
+  Character2UIDs: {fileID: 11400000, guid: 4fcd48caec7e9b742a62abfbb5f92750, type: 2}
+  Character1Material: {fileID: 2100000, guid: 5a9cd73ae020c27458834ab6ad930803, type: 2}
+  Character2Material: {fileID: 2100000, guid: 027996b2e9352a942b18c09e93d2c985, type: 2}
 --- !u!1 &411434739
 GameObject:
   m_ObjectHideFlags: 0
