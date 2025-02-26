@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Text;
+using UnityEditor;
+
 
 #if UNITY_ANDROID
 using UnityEngine.Android;
@@ -12,6 +14,9 @@ public class NfcReader : MonoBehaviour
     private AndroidJavaObject mIntent;
     private string mLastNfcId = "";
 
+    //[SerializeField]
+    //private ReaderBehaviour readerBehaviour;
+
     [Header("Character UID Scriptable Objects")]
     [SerializeField] private NFCTagUID Character1UIDs;
     [SerializeField] private NFCTagUID Character2UIDs;
@@ -19,6 +24,11 @@ public class NfcReader : MonoBehaviour
     [Header("Character Materials")]
     [SerializeField] private Material Character1Material;
     [SerializeField] private Material Character2Material;
+
+    [Header("Character Spawning Prerequisites")]
+    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private GameObject char1Prefab;
+    [SerializeField] private GameObject char2Prefab;
 
     void Start()
     {
@@ -71,7 +81,7 @@ public class NfcReader : MonoBehaviour
             Debug.Log("NFC Tag Detected: " + tagIdString);
 
             // Change the cube color based on the detected tag
-            ChangeCubeColor(tagIdString);
+            SpawnCharacter(tagIdString);
         }
 #endif
     }
@@ -89,8 +99,25 @@ public class NfcReader : MonoBehaviour
         }
     }
 
+    void SpawnCharacter(string tagIdString)
+    {
+        if (Character1UIDs.tagUIDs.Contains(tagIdString))
+        {
+            GameObject enemy = Instantiate(char1Prefab, spawnPoint.position, Quaternion.identity);
+            Debug.Log("Cube color changed to Character 1!");
+        }
+        else if (Character2UIDs.tagUIDs.Contains(tagIdString))
+        {
+            GameObject enemy = Instantiate(char2Prefab, spawnPoint.position, Quaternion.identity);
+            Debug.Log("Cube color changed to Character 2!");
+        }
+        else
+        {
+            Debug.LogWarning("Tag ID not recognized!");
+        }
+    }
 
-    void ChangeCubeColor(string tagIdString)
+    void ChangeColor(string tagIdString)
     {
         if (Character1UIDs.tagUIDs.Contains(tagIdString))
         {
