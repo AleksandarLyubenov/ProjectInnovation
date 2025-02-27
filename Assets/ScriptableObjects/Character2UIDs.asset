@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48fcfcce7313e3742944f9098884631a, type: 3}
   m_Name: Character2UIDs
   m_EditorClassIdentifier: 
-  tagUIDs:
-  - 0497bbbf8f6180
-  - 04a5b3765f6181
+  tagData:
+  - uid: 0497bbbf8f6180
+    itemName: Outfit 2
+  - uid: 04a5b3765f6181
+    itemName: Outfit 2

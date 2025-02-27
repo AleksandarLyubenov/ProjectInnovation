@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48fcfcce7313e3742944f9098884631a, type: 3}
   m_Name: Character1UIDs
   m_EditorClassIdentifier: 
-  tagUIDs:
-  - 0486c1bf8f6180
-  - 04c9debe8f6180
+  tagData:
+  - uid: 0486c1bf8f6180
+    itemName: Character
+  - uid: 04c9debe8f6180
+    itemName: Character

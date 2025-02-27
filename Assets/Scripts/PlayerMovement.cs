@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private Vector3 targetPosition;
-    private bool isSelected = false;
+    public bool isSelected = false;
     private bool moving = false;
 
     void Start()

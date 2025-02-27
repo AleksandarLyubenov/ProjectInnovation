@@ -4,36 +4,43 @@ using UnityEngine;
 [CustomEditor(typeof(NFCTagUID))]
 public class UIDEditor : Editor
 {
-    private SerializedProperty tagUIDs;
+    private SerializedProperty tagData;
 
     private void OnEnable()
     {
-        tagUIDs = serializedObject.FindProperty("tagUIDs");
+        tagData = serializedObject.FindProperty("tagData");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        EditorGUILayout.LabelField("NFC Tag UIDs", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("NFC Tag Data", EditorStyles.boldLabel);
 
-        for (int i = 0; i < tagUIDs.arraySize; i++)
+        for (int i = 0; i < tagData.arraySize; i++)
         {
-            SerializedProperty tag = tagUIDs.GetArrayElementAtIndex(i);
+            SerializedProperty tag = tagData.GetArrayElementAtIndex(i);
+            SerializedProperty uid = tag.FindPropertyRelative("uid");
+            SerializedProperty itemName = tag.FindPropertyRelative("itemName");
 
+            EditorGUILayout.BeginVertical("box");
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(tag, new GUIContent($"Tag {i + 1}"));
-
+            EditorGUILayout.LabelField($"Tag {i + 1}", GUILayout.Width(60));
+            EditorGUILayout.PropertyField(uid, GUIContent.none);
+            EditorGUILayout.PropertyField(itemName, GUIContent.none);
             if (GUILayout.Button("X", GUILayout.Width(25)))
             {
-                tagUIDs.DeleteArrayElementAtIndex(i);
+                tagData.DeleteArrayElementAtIndex(i);
+                serializedObject.ApplyModifiedProperties();
+                break;
             }
             EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
         }
 
         if (GUILayout.Button("Add NFC Tag"))
         {
-            tagUIDs.InsertArrayElementAtIndex(tagUIDs.arraySize);
+            tagData.InsertArrayElementAtIndex(tagData.arraySize);
         }
 
         serializedObject.ApplyModifiedProperties();

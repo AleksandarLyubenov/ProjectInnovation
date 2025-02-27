@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Text;
 using UnityEditor;
+using UnityEngine.Events;
+
 
 
 #if UNITY_ANDROID
@@ -30,6 +32,15 @@ public class NfcReader : MonoBehaviour
     [SerializeField] private GameObject char1Prefab;
     [SerializeField] private GameObject char2Prefab;
 
+    [Header("Events")]
+    public UnityEvent<string> onNFCSuccess = new UnityEvent<string>();
+    public UnityEvent onNFCError = new UnityEvent();
+
+    public UnityEvent<string> onNFCAlreadyUnlocked = new UnityEvent<string>();
+
+    [Header("Unlockables Tracking")]
+    [SerializeField] private UnlockablesTracker unlockablesTracker;
+
     void Start()
     {
 #if UNITY_ANDROID
@@ -38,7 +49,6 @@ public class NfcReader : MonoBehaviour
             Permission.RequestUserPermission("android.permission.NFC");
         }
 
-        // Get current Android activity
         AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         mActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
 #endif
@@ -101,52 +111,81 @@ public class NfcReader : MonoBehaviour
 
     void SpawnCharacter(string tagIdString)
     {
-        if (Character1UIDs.tagUIDs.Contains(tagIdString))
+        string itemName = "";
+        GameObject prefabToSpawn = null;
+
+        foreach (var tag in Character1UIDs.tagData)
         {
-            GameObject enemy = Instantiate(char1Prefab, spawnPoint.position, Quaternion.identity);
-            Debug.Log("Cube color changed to Character 1!");
+            if (tag.uid == tagIdString)
+            {
+                itemName = tag.itemName;
+                prefabToSpawn = char1Prefab;
+                break;
+            }
         }
-        else if (Character2UIDs.tagUIDs.Contains(tagIdString))
+
+        if (prefabToSpawn == null)
         {
-            GameObject enemy = Instantiate(char2Prefab, spawnPoint.position, Quaternion.identity);
-            Debug.Log("Cube color changed to Character 2!");
+            foreach (var tag in Character2UIDs.tagData)
+            {
+                if (tag.uid == tagIdString)
+                {
+                    itemName = tag.itemName;
+                    prefabToSpawn = char2Prefab;
+                    break;
+                }
+            }
+        }
+
+        if (prefabToSpawn != null)
+        {
+            if (unlockablesTracker.IsUnlocked(itemName))
+            {
+                onNFCAlreadyUnlocked.Invoke(itemName);
+            }
+            else
+            {
+                unlockablesTracker.Unlock(itemName);
+                Instantiate(prefabToSpawn, spawnPoint.position, Quaternion.identity);
+                onNFCSuccess.Invoke(itemName);
+            }
         }
         else
         {
-            Debug.LogWarning("Tag ID not recognized!");
+            onNFCError.Invoke();
         }
     }
 
-    void ChangeColor(string tagIdString)
-    {
-        if (Character1UIDs.tagUIDs.Contains(tagIdString))
-        {
-            SetCubeMaterial(Character1Material);
-            Debug.Log("Cube color changed to Character 1!");
-        }
-        else if (Character2UIDs.tagUIDs.Contains(tagIdString))
-        {
-            SetCubeMaterial(Character2Material);
-            Debug.Log("Cube color changed to Character 2!");
-        }
-        else
-        {
-            Debug.LogWarning("Tag ID not recognized!");
-        }
-    }
+    //void ChangeColor(string tagIdString)
+    //{
+    //    if (Character1UIDs.tagUIDs.Contains(tagIdString))
+    //    {
+    //        SetCubeMaterial(Character1Material);
+    //        Debug.Log("Cube color changed to Character 1!");
+    //    }
+    //    else if (Character2UIDs.tagUIDs.Contains(tagIdString))
+    //    {
+    //        SetCubeMaterial(Character2Material);
+    //        Debug.Log("Cube color changed to Character 2!");
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("Tag ID not recognized!");
+    //    }
+    //}
 
 
-    void DestroyCube()
-    {
-        GameObject cube = GameObject.Find("Cube");
-        if (cube != null)
-        {
-            Destroy(cube);
-            Debug.Log("Cube destroyed!");
-        }
-        else
-        {
-            Debug.LogError("No cube found in scene!");
-        }
-    }
+    //void DestroyCube()
+    //{
+    //    GameObject cube = GameObject.Find("Cube");
+    //    if (cube != null)
+    //    {
+    //        Destroy(cube);
+    //        Debug.Log("Cube destroyed!");
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("No cube found in scene!");
+    //    }
+    //}
 }
