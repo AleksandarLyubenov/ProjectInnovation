@@ -9,8 +9,8 @@ public class ClosetTrigger : MonoBehaviour
     [SerializeField] private UnlockablesTracker unlockablesTracker;
 
     [Header("UI Elements")]
-    public GameObject closetPanel; // Assign in Inspector
-    public RectTransform closetTransform; // UI Animation
+    public GameObject closetPanel;
+    public RectTransform closetTransform;
     public Button outfit1Button, outfit2Button, closeButton;
 
     private Vector2 offScreenPos, onScreenPos;
@@ -27,7 +27,6 @@ public class ClosetTrigger : MonoBehaviour
         outfit2Button.onClick.AddListener(SelectOutfit2);
         closeButton.onClick.AddListener(CloseCloset);
 
-        // Initialize outfit 2 button state
         UpdateOutfitButtonStates();
     }
 
@@ -37,15 +36,13 @@ public class ClosetTrigger : MonoBehaviour
     {
         if (other.TryGetComponent<PlayerMovement>(out PlayerMovement playerMovement))
         {
-            if (playerMovement.isSelected) // Ensure it's the selected player
+            if (playerMovement.isSelected)
             {
                 Debug.Log("Closet triggered by selected player!");
 
-                // Deselect the player to allow UI interaction
                 playerMovement.isSelected = false;
                 playerMovement.outline.SetActive(false);
 
-                // Assign player and outfits
                 player = other.gameObject;
                 outfit1 = player.transform.Find("Canvas/Outfit 1")?.gameObject;
                 outfit2 = player.transform.Find("Canvas/Outfit 2")?.gameObject;
@@ -72,13 +69,12 @@ public class ClosetTrigger : MonoBehaviour
         {
             Debug.Log("Player exited closet trigger. Closing UI.");
             CloseCloset();
-            player = null; // Reset player reference
+            player = null;
         }
     }
 
     private void ShowCloset()
     {
-        // Check unlock status when opening closet
         UpdateOutfitButtonStates();
         closetPanel.SetActive(true);
         StartCoroutine(AnimatePanel(onScreenPos));
@@ -88,13 +84,12 @@ public class ClosetTrigger : MonoBehaviour
     {
         if (unlockablesTracker != null)
         {
-            // Assuming "Outfit 2" is the name used in your UnlockablesTracker
             outfit2Button.interactable = unlockablesTracker.IsUnlocked("Outfit 2");
         }
         else
         {
             Debug.LogError("UnlockablesTracker reference not set in ClosetTrigger!");
-            outfit2Button.interactable = false; // Fail-safe
+            outfit2Button.interactable = false;
         }
     }
 
