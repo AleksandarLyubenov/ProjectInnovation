@@ -4,5 +4,15 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
-  m_configObjects: {}
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Lahon's minigame Scene (before first merge).unity
+    guid: 54319fdde9068a04d9edaa0a19d5a162
+  - enabled: 1
+    path: Assets/Scenes/GameOverScene.unity
+    guid: 0bcffeffaa0a3ad41b0556db45748126
+  m_configObjects:
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 11e5c1d4a8aece6448523371fe83f9ce,
+      type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
+      guid: 5c85db532435e6a4ba2b674982d3d8d9, type: 2}
