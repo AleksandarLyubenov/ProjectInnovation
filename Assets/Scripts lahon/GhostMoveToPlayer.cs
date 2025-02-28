@@ -28,7 +28,7 @@ public class GhostMoveToPlayer : MonoBehaviour
 
     private void Start()
     {
-        lives = 3;
+        lives = 1;
     }
     // Update is called once per frame
     void Update()
@@ -56,7 +56,7 @@ public class GhostMoveToPlayer : MonoBehaviour
             directionG2T.Normalize();
 
             // apply to position
-            transform.position -= (Vector3)directionG2T * 0.004f;
+            transform.position -= (Vector3)directionG2T * 0.004f * 10;
         }
     }
 

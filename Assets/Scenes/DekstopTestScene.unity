@@ -976,7 +976,7 @@ MonoBehaviour:
   popupTransform: {fileID: 1145787339}
   yesButton: {fileID: 1724032157}
   noButton: {fileID: 537471397}
-  minigameSceneName: Lahon's Scene
+  minigameSceneName: Lahon's minigame Scene (before first merge)
 --- !u!1 &537471395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1580,7 +1580,7 @@ PrefabInstance:
     - target: {fileID: 7676820435350645707, guid: 06fea1145b8833043ac8f229fa62177a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.987
+      value: 1.777
       objectReference: {fileID: 0}
     - target: {fileID: 7676820435350645707, guid: 06fea1145b8833043ac8f229fa62177a,
         type: 3}

@@ -8,9 +8,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Aleksander's Scene.unity
     guid: 0f7173ff81d71f54ea7a147ac01534ed
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Lahon's Scene.unity
     guid: a3cfa105422821c449029ce144389eaa
+  - enabled: 1
+    path: Assets/Scenes/Lahon's minigame Scene (before first merge).unity
+    guid: 54319fdde9068a04d9edaa0a19d5a162
+  - enabled: 1
+    path: Assets/Scenes/GameOverScene.unity
+    guid: 0bcffeffaa0a3ad41b0556db45748126
+  - enabled: 1
+    path: Assets/Scenes/DekstopTestScene.unity
+    guid: c5bae05808a446c4a93d194ff101da43
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000,
       guid: 694b63a8484d04a4d9e96d62e5254bc2, type: 2}

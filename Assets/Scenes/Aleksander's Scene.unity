@@ -976,7 +976,7 @@ MonoBehaviour:
   popupTransform: {fileID: 1145787339}
   yesButton: {fileID: 1724032157}
   noButton: {fileID: 537471397}
-  minigameSceneName: Lahon's Scene
+  minigameSceneName: Lahon's minigame Scene (before first merge)
 --- !u!1 &537471395
 GameObject:
   m_ObjectHideFlags: 0
