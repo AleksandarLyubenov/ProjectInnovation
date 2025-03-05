@@ -6,7 +6,7 @@ public class FlashlightController : MonoBehaviour
     public Light spotlight;
     public float flashRange = 12f;
     [SerializeField] private int killedEnemies = 0;
-    [SerializeField] private float deadzoneRadius = 0.2f;
+    [SerializeField] private float deadzoneRadius = 1f;
 
     [Header("Controls")]
     public bool useGyro = false;
