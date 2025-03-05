@@ -36,9 +36,10 @@ public class TouchDrawer : MonoBehaviour
 
     void FinishLine()
     {
+
         if (drawing != null)
             StopCoroutine(drawing);
-        print(currentLine.gameObject.name);
+        Debug.Log(currentLine.gameObject.name);
 
         SetEdgeCollider(currentLine);
         if (Physics2D.Raycast(enemy.position, enemy.transform.right, Mathf.Infinity, lineLayerMask) &&
@@ -46,9 +47,10 @@ public class TouchDrawer : MonoBehaviour
             Physics2D.Raycast(enemy.position, enemy.transform.up, Mathf.Infinity, lineLayerMask) &&
             Physics2D.Raycast(enemy.position, -enemy.transform.up, Mathf.Infinity, lineLayerMask))
         {
-            print("win");
+            Debug.Log("win");
             GhostMoveToPlayer.Instance.isSpawned = false; // Call the DisableGhost method
         }
+
 
         Destroy(currentLine.gameObject);
     }

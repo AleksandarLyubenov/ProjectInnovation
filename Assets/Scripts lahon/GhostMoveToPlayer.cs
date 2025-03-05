@@ -6,9 +6,11 @@ public class GhostMoveToPlayer : MonoBehaviour
 {
     public static GhostMoveToPlayer Instance;
 
+    [Header("Entities")]
     [SerializeField] private GameObject target;
-    [SerializeField] private string targetPlayer;
     [SerializeField] private Transform spawner;
+
+    [Header("Components")]
     [SerializeField] private Renderer ghostRenderer; // Reference to the Renderer component
     [SerializeField] private Collider2D ghostCollider; // Reference to the Collider2D component
 
@@ -23,12 +25,12 @@ public class GhostMoveToPlayer : MonoBehaviour
 
     private void Awake()
     {
-            Instance = this;
+        Instance = this;
     }
 
     private void Start()
     {
-        lives = 1;
+        lives = 5;
     }
     // Update is called once per frame
     void Update()
@@ -36,7 +38,7 @@ public class GhostMoveToPlayer : MonoBehaviour
         Debug.Log(isSpawned);
         LockPosition();
         TrackingPlayer();
- 
+
         RespawnAferCaught();
 
         Debug.Log(lives);
@@ -56,7 +58,7 @@ public class GhostMoveToPlayer : MonoBehaviour
             directionG2T.Normalize();
 
             // apply to position
-            transform.position -= (Vector3)directionG2T * 0.004f * 10;
+            transform.position -= (Vector3)directionG2T * 0.004f * 1;
         }
     }
 
@@ -72,51 +74,45 @@ public class GhostMoveToPlayer : MonoBehaviour
 
             isDamaged = true;
             DisableGhost();
-            StartCoroutine(GhostRespawnAfterDMG(1f));
+            StartCoroutine(RespawnGhost(1f));
         }
     }
 
-    public void DisableGhost()
-    {
-        Debug.Log("Disabling ghost");
-        Debug.Log(isDamaged);
-        ghostRenderer.enabled = false; // Disable the Renderer component
-        ghostCollider.enabled = false; // Disable the Collider2D component
-        transform.position = spawner.position;
-    }
-
-    private void RespawnAferCaught()
+    public void RespawnAferCaught()
     {
         if (!isSpawned)
         {
-            DisableAfterCaught();
-            StartCoroutine(GhostRespawnAfterCapture(1f));
+            DisableGhost();
+            StartCoroutine(RespawnGhost(1f));
         }
     }
 
-    private void DisableAfterCaught()
+    private void DisableGhost()
     {
-        ghostRenderer.enabled = false;
-        ghostCollider.enabled = false;
+        ghostRenderer.enabled = false;// Disable the Renderer component
+        ghostCollider.enabled = false;// Disable the Collider2D component
         transform.position = spawner.position;
     }
 
-    private IEnumerator GhostRespawnAfterDMG(float Delay)
+    private IEnumerator RespawnGhost(float Delay)
     {
         Debug.Log("Starting coroutine");
         yield return new WaitForSeconds(Delay);
         Debug.Log("Re-enabling ghost");
-        isDamaged = false;
+
+        if (!isSpawned)
+        {
+            Debug.Log("Ghost is Respawned");
+            isSpawned = true;
+        }
+        else if (isDamaged)
+        {
+            Debug.Log("Ghost is not damaging player anymore");
+            isDamaged = false;
+        }
+
         ghostRenderer.enabled = true; // Enable the Renderer component
         ghostCollider.enabled = true; // Enable the Collider2D component
-    }
-
-    private IEnumerator GhostRespawnAfterCapture(float Delay)
-    {
-        yield return new WaitForSeconds(Delay);
-        ghostRenderer.enabled = true;
-        ghostCollider.enabled = true;
-        isSpawned = true;
     }
 
     private void SwitchScene()
