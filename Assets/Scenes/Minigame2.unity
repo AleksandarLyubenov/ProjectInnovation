@@ -234,7 +234,10 @@ MonoBehaviour:
   flashRange: 10.2
   killedEnemies: 0
   deadzoneRadius: 0.3
-  useGyro: 1
+  useGyro: 0
+  flashIntensityMultiplier: 1
+  flashSpotAngle: 170
+  flashDuration: 1
 --- !u!1 &376517033
 GameObject:
   m_ObjectHideFlags: 0
