@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DekstopTestScene.unity
     guid: c5bae05808a446c4a93d194ff101da43
+  - enabled: 1
+    path: Assets/Scenes/Minigame2.unity
+    guid: 3c0fca91861f3c146b19ac5ae67e477e
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000,
       guid: 694b63a8484d04a4d9e96d62e5254bc2, type: 2}
