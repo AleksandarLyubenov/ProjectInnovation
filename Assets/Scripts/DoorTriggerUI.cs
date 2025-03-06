@@ -26,9 +26,10 @@ public class DoorTrigger : MonoBehaviour
         noButton.onClick.AddListener(ClosePopup);
     }
 
-    private void OnTriggerEnter(Collider other)
+    // Changed to OnTriggerEnter2D for 2D physics
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) // Make sure your player has the "Player" tag
+        if (other.CompareTag("Player"))
         {
             ShowPopup();
         }
