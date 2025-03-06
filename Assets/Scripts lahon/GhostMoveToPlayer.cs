@@ -4,34 +4,30 @@ using UnityEngine.SceneManagement;
 
 public class GhostMoveToPlayer : MonoBehaviour
 {
-    public static GhostMoveToPlayer Instance;
-
     [Header("Entities")]
     [SerializeField] private GameObject target;
     [SerializeField] private Transform spawner;
 
     [Header("Components")]
-    [SerializeField] private Renderer ghostRenderer; // Reference to the Renderer component
+    [SerializeField] private SpriteRenderer ghostRenderer; // Reference to the Renderer component
     [SerializeField] private Collider2D ghostCollider; // Reference to the Collider2D component
+
+    private Player playerScipt;
 
     private Vector2 targetPos;
     private Vector2 ghostPos;
     private Vector2 directionG2T;
 
-    private bool isDamaged = false;
+
     public bool isSpawned = true;
 
-    private int lives;
 
-    private void Awake()
+    public void Start()
     {
-        Instance = this;
+        ghostRenderer = GetComponent<SpriteRenderer>();
+        playerScipt = FindAnyObjectByType<Player>();
     }
 
-    private void Start()
-    {
-        lives = 5;
-    }
     // Update is called once per frame
     void Update()
     {
@@ -41,12 +37,11 @@ public class GhostMoveToPlayer : MonoBehaviour
 
         RespawnAferCaught();
 
-        Debug.Log(lives);
     }
 
-    void TrackingPlayer() // for this to work you need both player and ghost to be on the same z position, otherwise the ghost slows down
+    void TrackingPlayer()
     {
-        if (target != null)
+        if (isSpawned && target != null)
         {
             // get the position of the ghost and the target
             ghostPos = transform.position;
@@ -62,17 +57,12 @@ public class GhostMoveToPlayer : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!isDamaged)
+        if (other.CompareTag("Player"))
         {
-            Debug.Log("health -1");
-            lives -= 1;
-
-            if (lives <= 0)
-                SwitchScene();
-
-            isDamaged = true;
+            
+            playerScipt.PlayerTakesDmg(1);
             DisableGhost();
             StartCoroutine(RespawnGhost(1f));
         }
@@ -87,11 +77,12 @@ public class GhostMoveToPlayer : MonoBehaviour
         }
     }
 
-    private void DisableGhost()
+    public void DisableGhost()
     {
-        ghostRenderer.enabled = false;// Disable the Renderer component
-        ghostCollider.enabled = false;// Disable the Collider2D component
+        this.ghostRenderer.enabled = false; // Disable the Renderer component
+        this.ghostCollider.enabled = false; // Disable the Collider2D component
         transform.position = spawner.position;
+        isSpawned = false; // Set isSpawned to false
     }
 
     private IEnumerator RespawnGhost(float Delay)
@@ -105,19 +96,9 @@ public class GhostMoveToPlayer : MonoBehaviour
             Debug.Log("Ghost is Respawned");
             isSpawned = true;
         }
-        else if (isDamaged)
-        {
-            Debug.Log("Ghost is not damaging player anymore");
-            isDamaged = false;
-        }
 
-        ghostRenderer.enabled = true; // Enable the Renderer component
-        ghostCollider.enabled = true; // Enable the Collider2D component
-    }
-
-    private void SwitchScene()
-    {
-        SceneManager.LoadScene("GameOverScene");
+        this.ghostRenderer.enabled = true; // Enable the Renderer component
+        this.ghostCollider.enabled = true; // Enable the Collider2D component
     }
 
     void LockPosition()

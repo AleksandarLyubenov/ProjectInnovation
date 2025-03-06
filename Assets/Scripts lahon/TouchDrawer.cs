@@ -6,9 +6,9 @@ public class TouchDrawer : MonoBehaviour
 {
     Coroutine drawing;
     public GameObject linePrefab;
-    public Transform enemy;
+    public List<Transform> enemies;
     private LineRenderer currentLine;
-    private Vector3 intersectionPoint;
+    private PolygonCollider2D polygonCollider;
 
     public LayerMask lineLayerMask;
 
@@ -36,23 +36,28 @@ public class TouchDrawer : MonoBehaviour
 
     void FinishLine()
     {
-
         if (drawing != null)
             StopCoroutine(drawing);
-        Debug.Log(currentLine.gameObject.name);
+        Debug.Log(this.currentLine.gameObject.name);
 
-        SetEdgeCollider(currentLine);
-        if (Physics2D.Raycast(enemy.position, enemy.transform.right, Mathf.Infinity, lineLayerMask) &&
-            Physics2D.Raycast(enemy.position, -enemy.transform.right, Mathf.Infinity, lineLayerMask) &&
-            Physics2D.Raycast(enemy.position, enemy.transform.up, Mathf.Infinity, lineLayerMask) &&
-            Physics2D.Raycast(enemy.position, -enemy.transform.up, Mathf.Infinity, lineLayerMask))
+        SetPolygonCollider(currentLine);
+
+        foreach (Transform enemy in enemies)
         {
-            Debug.Log("win");
-            GhostMoveToPlayer.Instance.isSpawned = false; // Call the DisableGhost method
+            if (this.polygonCollider.OverlapPoint(enemy.position))
+            {
+                Debug.Log("win");
+                GhostMoveToPlayer ghostScript = enemy.GetComponent<GhostMoveToPlayer>();
+                if (ghostScript != null)
+                {
+                    ghostScript.isSpawned = false; // Call the DisableGhost method
+                    ghostScript.DisableGhost(); // Disable the ghost
+                }
+                break; // ensure only one enemy is being deleted (chooses the first enemy in the list)
+            }
         }
 
-
-        Destroy(currentLine.gameObject);
+        Destroy(this.currentLine.gameObject);
     }
 
     IEnumerator DrawLine()
@@ -72,24 +77,34 @@ public class TouchDrawer : MonoBehaviour
         }
     }
 
-    void SetEdgeCollider(LineRenderer lineRenderer)
+    void SetPolygonCollider(LineRenderer lineRenderer)
     {
-        List<Vector2> edges = new List<Vector2>();
+        List<Vector2> points = new List<Vector2>();
 
         for (int point = 0; point < lineRenderer.positionCount; point++)
         {
             Vector3 lineRendererPoint = lineRenderer.GetPosition(point);
-            edges.Add(new Vector2(lineRendererPoint.x, lineRendererPoint.y));
+            points.Add(new Vector2(lineRendererPoint.x, lineRendererPoint.y));
         }
-        EdgeCollider2D edgeCollider = currentLine.gameObject.AddComponent<EdgeCollider2D>();
-        edgeCollider.SetPoints(edges);
+
+        if (polygonCollider == null)
+        {
+            polygonCollider = this.currentLine.gameObject.AddComponent<PolygonCollider2D>();
+        }
+        this.polygonCollider.SetPath(0, points.ToArray());
     }
 
     private void OnDrawGizmos()
     {
-        Debug.DrawRay(enemy.position, enemy.transform.right);
-        Debug.DrawRay(enemy.position, -enemy.transform.right);
-        Debug.DrawRay(enemy.position, enemy.transform.up);
-        Debug.DrawRay(enemy.position, -enemy.transform.up);
+        if (enemies != null)
+        {
+            foreach (Transform enemy in enemies)
+            {
+                Debug.DrawRay(enemy.position, enemy.transform.right);
+                Debug.DrawRay(enemy.position, -enemy.transform.right);
+                Debug.DrawRay(enemy.position, enemy.transform.up);
+                Debug.DrawRay(enemy.position, -enemy.transform.up);
+            }
+        }
     }
 }
