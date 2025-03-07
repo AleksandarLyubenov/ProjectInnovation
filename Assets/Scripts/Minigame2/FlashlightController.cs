@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class FlashlightController : MonoBehaviour
 {
@@ -6,13 +7,21 @@ public class FlashlightController : MonoBehaviour
     public Light spotlight;
     public float flashRange = 12f;
     [SerializeField] private int killedEnemies = 0;
-    [SerializeField] private float deadzoneRadius = 0.2f;
+    [SerializeField] private float deadzoneRadius = 1f;
 
     [Header("Controls")]
     public bool useGyro = false;
 
+    [Header("Flash Effect")]
+    [SerializeField] private float flashIntensityMultiplier = 3f;
+    [SerializeField] private float flashSpotAngle = 170f;
+    [SerializeField] private float flashDuration = 1f;
+
     private Gyroscope gyro;
     private bool gyroEnabled;
+    private float originalIntensity;
+    private float originalSpotAngle;
+    private Coroutine flashRoutine;
 
     private void Awake()
     {
@@ -24,6 +33,10 @@ public class FlashlightController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        // Store original light properties
+        originalIntensity = spotlight.intensity;
+        originalSpotAngle = spotlight.spotAngle;
 
         if (useGyro)
         {
@@ -75,6 +88,7 @@ public class FlashlightController : MonoBehaviour
 
     void Flash()
     {
+        // Existing flash logic
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, flashRange))
         {
@@ -107,9 +121,31 @@ public class FlashlightController : MonoBehaviour
                 }
             }
         }
+
+        // Trigger flash effect
+        if (flashRoutine != null)
+        {
+            StopCoroutine(flashRoutine);
+        }
+        flashRoutine = StartCoroutine(FlashEffect());
     }
 
-private void OnDrawGizmos()
+    private IEnumerator FlashEffect()
+    {
+        // Apply flash effect
+        spotlight.intensity = originalIntensity * flashIntensityMultiplier;
+        spotlight.spotAngle = flashSpotAngle;
+
+        // Wait for duration
+        yield return new WaitForSeconds(flashDuration);
+
+        // Revert to original values
+        spotlight.intensity = originalIntensity;
+        spotlight.spotAngle = originalSpotAngle;
+        flashRoutine = null;
+    }
+
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * flashRange);

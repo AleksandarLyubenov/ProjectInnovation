@@ -6,14 +6,16 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public LayerMask wallLayer;
 
-    private Rigidbody rb;
+    private Rigidbody2D rb;
     private Vector3 targetPosition;
     public bool isSelected = false;
     private bool moving = false;
+    private Camera mainCamera;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
+        mainCamera = Camera.main;
         targetPosition = transform.position;
         outline.SetActive(false);
     }
@@ -23,48 +25,38 @@ public class PlayerMovement : MonoBehaviour
         // Handle selection
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            Vector2 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Collider2D hitCollider = Physics2D.OverlapPoint(mousePos);
 
-            if (Physics.Raycast(ray, out hit))
+            if (hitCollider != null && hitCollider.gameObject == gameObject)
             {
-                if (hit.collider.gameObject == gameObject)
+                isSelected = !isSelected;
+                outline.SetActive(isSelected);
+            }
+            else if (isSelected)
+            {
+                Vector3 destination = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                destination.z = 0; // Ensure z-position is zero for 2D
+
+                // Check for walls using 2D linecast
+                if (!Physics2D.Linecast(transform.position, destination, wallLayer))
                 {
-                    isSelected = !isSelected;
-                    outline.SetActive(isSelected);
-                }
-                else if (isSelected)
-                {
-                    Vector3 destination = GetGroundPosition(ray);
-                    if (!Physics.Raycast(transform.position, destination - transform.position, Vector3.Distance(transform.position, destination), wallLayer))
-                    {
-                        targetPosition = destination;
-                        moving = true;
-                    }
+                    targetPosition = destination;
+                    moving = true;
                 }
             }
         }
- 
+
         if (moving)
         {
-            Vector3 direction = (targetPosition - transform.position).normalized;
+            Vector2 direction = (targetPosition - transform.position).normalized;
             rb.velocity = direction * moveSpeed;
 
-            if (Vector3.Distance(transform.position, targetPosition) < 0.2f)
+            if (Vector2.Distance(transform.position, targetPosition) < 0.1f)
             {
-                rb.velocity = Vector3.zero;
+                rb.velocity = Vector2.zero;
                 moving = false;
             }
         }
-    }
-
-    Vector3 GetGroundPosition(Ray ray)
-    {
-        RaycastHit groundHit;
-        if (Physics.Raycast(ray, out groundHit, Mathf.Infinity, LayerMask.GetMask("Ground")))
-        {
-            return groundHit.point;
-        }
-        return transform.position;
     }
 }
