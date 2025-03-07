@@ -234,7 +234,7 @@ MonoBehaviour:
   flashRange: 10.2
   killedEnemies: 0
   deadzoneRadius: 0.75
-  useGyro: 0
+  useGyro: 1
   flashIntensityMultiplier: 1
   flashSpotAngle: 120
   flashDuration: 0.2
@@ -367,7 +367,7 @@ Transform:
   m_GameObject: {fileID: 492901916}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.76, y: 2.94, z: 0.5}
+  m_LocalPosition: {x: -10.26, y: 2.94, z: 0.5}
   m_LocalScale: {x: 0.49999997, y: 0.49999997, z: 0.49999997}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -474,7 +474,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071051, y: 0.0015246796, z: 0.0015246795, w: 0.70710516}
   m_LocalPosition: {x: 0.0021562173, y: -0.00000005953825, z: 0.49999535}
-  m_LocalScale: {x: 2, y: 1, z: 1}
+  m_LocalScale: {x: 2.3, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -849,7 +849,7 @@ Transform:
   m_GameObject: {fileID: 2020637238}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.89, y: 2.08, z: 0.4}
+  m_LocalPosition: {x: 9.389999, y: 2.08, z: 0.4}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []

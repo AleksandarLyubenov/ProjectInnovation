@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f79fced8c8d4c074f863c541e66c39ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToSwitchTo: DekstopTestScene
+  sceneToSwitchTo: DesktopTestScene
 --- !u!4 &162888440
 Transform:
   m_ObjectHideFlags: 0
