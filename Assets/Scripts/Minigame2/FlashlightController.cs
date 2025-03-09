@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+
 
 public class FlashlightController : MonoBehaviour
 {
@@ -22,6 +24,8 @@ public class FlashlightController : MonoBehaviour
     private float originalIntensity;
     private float originalSpotAngle;
     private Coroutine flashRoutine;
+
+    [SerializeField] private string loadLevel = "GameOverScene";
 
     private void Awake()
     {
@@ -88,7 +92,6 @@ public class FlashlightController : MonoBehaviour
 
     void Flash()
     {
-        // Existing flash logic
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, flashRange))
         {
@@ -99,23 +102,20 @@ public class FlashlightController : MonoBehaviour
                 {
                     GhostTransparencyController ghost = closeHit.GetComponent<GhostTransparencyController>();
 
-                    if (ghost != null)
+                    if (ghost != null && ghost.currentAlpha > 0.5f)
                     {
-                        Debug.Log($"Ghost Detected: {ghost.name}, Alpha: {ghost.currentAlpha}");
-
-                        if (ghost.currentAlpha > 0.5f)
+                        if (!ghost.isPassive)
                         {
-                            if (!ghost.isPassive)
-                            {
-                                killedEnemies++;
-                                Debug.Log($"Enemy Eliminated! Total: {killedEnemies}");
-                                ghost.DestroyGhost();
-                            }
-                            else
-                            {
-                                Debug.Log("Game Over - Passive Ghost Eliminated!");
-                                ghost.DestroyGhost();
-                            }
+                            killedEnemies++;
+                            Debug.Log($"Enemy Eliminated! Total: {killedEnemies}");
+                            ghost.DestroyGhost();
+                        }
+                        else
+                        {
+                            Debug.Log("Game Over - Passive Ghost Eliminated!");
+                            VibrationManager.Instance.StopVibration();
+                            StartCoroutine(LoadGameOverScene());
+                            return;
                         }
                     }
                 }
@@ -130,16 +130,27 @@ public class FlashlightController : MonoBehaviour
         flashRoutine = StartCoroutine(FlashEffect());
     }
 
+    private IEnumerator LoadGameOverScene()
+    {
+        VibrationManager.Instance.StopVibration();
+
+        spotlight.enabled = false;
+
+        yield return new WaitForEndOfFrame();
+
+        SceneManager.LoadScene(loadLevel, LoadSceneMode.Single);
+
+        Instance = null;
+        Destroy(gameObject);
+    }
+
     private IEnumerator FlashEffect()
     {
-        // Apply flash effect
         spotlight.intensity = originalIntensity * flashIntensityMultiplier;
         spotlight.spotAngle = flashSpotAngle;
 
-        // Wait for duration
         yield return new WaitForSeconds(flashDuration);
 
-        // Revert to original values
         spotlight.intensity = originalIntensity;
         spotlight.spotAngle = originalSpotAngle;
         flashRoutine = null;

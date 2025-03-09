@@ -38,8 +38,8 @@ public class NfcReader : MonoBehaviour
 
     public UnityEvent<string> onNFCAlreadyUnlocked = new UnityEvent<string>();
 
-    [Header("Unlockables Tracking")]
-    [SerializeField] private UnlockablesTracker unlockablesTracker;
+    //[Header("Unlockables Tracking")]
+    //[SerializeField] private UnlockablesTracker unlockablesTracker;
 
     void Start()
     {
@@ -139,13 +139,13 @@ public class NfcReader : MonoBehaviour
 
         if (prefabToSpawn != null)
         {
-            if (unlockablesTracker.IsUnlocked(itemName))
+            if (SaveManager.Instance.IsCharacterUnlocked(itemName))
             {
                 onNFCAlreadyUnlocked.Invoke(itemName);
             }
             else
             {
-                unlockablesTracker.Unlock(itemName);
+                SaveManager.Instance.UnlockCharacter(itemName);
                 Instantiate(prefabToSpawn, spawnPoint.position, Quaternion.identity);
                 onNFCSuccess.Invoke(itemName);
             }

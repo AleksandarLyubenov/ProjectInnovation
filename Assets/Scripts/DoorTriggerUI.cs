@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -8,11 +9,17 @@ public class DoorTrigger : MonoBehaviour
     public GameObject popupPanel;
     public RectTransform popupTransform;
     public Button yesButton;
+    public TextMeshProUGUI yesButtonText; // Reference to the TMP text component
     public Button noButton;
     public string minigameSceneName;
 
+    [Header("Energy Settings")]
+    [SerializeField] private int energyCost = 3;
+    [SerializeField] private Color disabledColor = Color.gray;
+
     private Vector2 offScreenPos;
     private Vector2 onScreenPos;
+    private Color normalColor;
 
     private void Start()
     {
@@ -22,11 +29,13 @@ public class DoorTrigger : MonoBehaviour
         popupTransform.anchoredPosition = offScreenPos;
         popupPanel.SetActive(false);
 
+        // Store original color
+        normalColor = yesButtonText.color;
+
         yesButton.onClick.AddListener(StartMinigame);
         noButton.onClick.AddListener(ClosePopup);
     }
 
-    // Changed to OnTriggerEnter2D for 2D physics
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -39,16 +48,35 @@ public class DoorTrigger : MonoBehaviour
     {
         popupPanel.SetActive(true);
         StartCoroutine(AnimatePanel(onScreenPos));
+
+        // Check conditions
+        bool hasEnergy = SaveManager.Instance.GetEnergy() >= energyCost;
+        bool hasSanity = SaveManager.Instance.GetSanity() > 0;
+
+        // Update button state
+        yesButton.interactable = hasEnergy && hasSanity;
+        yesButtonText.color = yesButton.interactable ? normalColor : disabledColor;
     }
 
     void ClosePopup()
     {
-        StartCoroutine(AnimatePanel(offScreenPos, () => popupPanel.SetActive(false)));
+        StartCoroutine(AnimatePanel(offScreenPos, () => {
+            popupPanel.SetActive(false);
+            // Reset button appearance
+            yesButton.interactable = true;
+            yesButtonText.color = normalColor;
+        }));
     }
 
     void StartMinigame()
     {
-        SceneManager.LoadScene(minigameSceneName);
+        // Final check in case button was clicked while disabled
+        if (SaveManager.Instance.GetEnergy() >= energyCost &&
+            SaveManager.Instance.GetSanity() > 0)
+        {
+            SaveManager.Instance.SetEnergy(SaveManager.Instance.GetEnergy() - energyCost);
+            SceneManager.LoadScene(minigameSceneName);
+        }
     }
 
     IEnumerator AnimatePanel(Vector2 targetPos, System.Action onComplete = null)
