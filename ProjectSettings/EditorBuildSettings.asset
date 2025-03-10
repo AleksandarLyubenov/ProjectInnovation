@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Aleksander's Scene.unity
     guid: 0f7173ff81d71f54ea7a147ac01534ed
   - enabled: 0
@@ -13,7 +13,7 @@ EditorBuildSettings:
     guid: a3cfa105422821c449029ce144389eaa
   - enabled: 1
     path: Assets/Scenes/DesktopTestScene.unity
-    guid: f9f3cbad44743b74c9c0cc33ccd61061
+    guid: 59722ded1567e1a4dad310210b5d63b5
   - enabled: 1
     path: Assets/Scenes/Lahon's minigame Scene (before first merge).unity
     guid: 54319fdde9068a04d9edaa0a19d5a162

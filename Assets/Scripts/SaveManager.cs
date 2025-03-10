@@ -116,9 +116,19 @@ public class SaveManager : MonoBehaviour
     public int GetEnergy() => playerData.energy;
     public void SetEnergy(int value)
     {
-        playerData.energy = Mathf.Max(value, 0);
+        int maxEnergy = SaveManager.Instance.CalculateMaxEnergy();
+        playerData.energy = Mathf.Clamp(value, 0, maxEnergy);
         SaveData();
         OnEnergyChanged?.Invoke();
+    }
+
+    public int CalculateMaxEnergy()
+    {
+        float cleanlinessFactor = GetCleanliness() * 0.1f;
+        float hungerFactor = GetHunger() * 0.1f;
+        float sanityFactor = GetSanity() * 0.1f;
+
+        return Mathf.RoundToInt(30 + cleanlinessFactor + hungerFactor + sanityFactor);
     }
 
     public int GetHunger() => playerData.hunger;
