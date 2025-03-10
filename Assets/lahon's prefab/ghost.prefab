@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4517844905177544569}
   - component: {fileID: 7231448625294783931}
   - component: {fileID: 2552741310825071646}
+  - component: {fileID: 5406949049334218211}
   m_Layer: 7
   m_Name: ghost
   m_TagString: Ghost
@@ -176,3 +177,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5406949049334218211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8628966220789525503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df6dbdeb20b5d8a41868eba0d2461278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyType: 0
+  enemyColor: {r: 0, g: 0, b: 0, a: 0}

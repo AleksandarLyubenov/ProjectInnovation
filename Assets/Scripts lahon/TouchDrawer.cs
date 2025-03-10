@@ -42,18 +42,34 @@ public class TouchDrawer : MonoBehaviour
 
         SetPolygonCollider(currentLine);
 
+        Color? targetColor = null;
+
         foreach (Transform enemy in enemies)
         {
             if (this.polygonCollider.OverlapPoint(enemy.position))
             {
-                Debug.Log("win");
-                GhostMoveToPlayer ghostScript = enemy.GetComponent<GhostMoveToPlayer>();
-                if (ghostScript != null)
+                EnemyColor enemyScript = enemy.GetComponent<EnemyColor>();
+                if (enemyScript != null)
                 {
-                    ghostScript.isSpawned = false; // Call the DisableGhost method
-                    ghostScript.DisableGhost(); // Disable the ghost
+                    Debug.Log($"Detected enemy with color: {enemyScript.enemyColor}");
+
+                    if (targetColor == null)
+                    {
+                        targetColor = enemyScript.enemyColor; // Set the target color based on the first enemy
+                        Debug.Log($"Target color set to: {targetColor}");
+                    }
+
+                    if (enemyScript.enemyColor == targetColor)
+                    {
+                        Debug.Log($"Destroying enemy of color: {enemyScript.enemyColor}");
+                        GhostMoveToPlayer ghostScript = enemy.GetComponent<GhostMoveToPlayer>();
+                        if (ghostScript != null)
+                        {
+                            ghostScript.isSpawned = false; // Call the DisableGhost method
+                            ghostScript.DisableGhost(); // Disable the ghost
+                        }
+                    }
                 }
-                break; // ensure only one enemy is being deleted (chooses the first enemy in the list)
             }
         }
 

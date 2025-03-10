@@ -12,20 +12,21 @@ public class GhostMoveToPlayer : MonoBehaviour
     [SerializeField] private SpriteRenderer ghostRenderer; // Reference to the Renderer component
     [SerializeField] private Collider2D ghostCollider; // Reference to the Collider2D component
 
-    private Player playerScipt;
+    [Header("Enemy Status")]
+    private Player playerScript;
+    private EnemyColor enemyColorScript;
 
     private Vector2 targetPos;
     private Vector2 ghostPos;
     private Vector2 directionG2T;
 
-
     public bool isSpawned = true;
-
 
     public void Start()
     {
         ghostRenderer = GetComponent<SpriteRenderer>();
-        playerScipt = FindAnyObjectByType<Player>();
+        playerScript = FindAnyObjectByType<Player>();
+        enemyColorScript = GetComponent<EnemyColor>();
     }
 
     // Update is called once per frame
@@ -35,8 +36,7 @@ public class GhostMoveToPlayer : MonoBehaviour
         LockPosition();
         TrackingPlayer();
 
-        RespawnAferCaught();
-
+        RespawnAfterCaught();
     }
 
     void TrackingPlayer()
@@ -53,7 +53,7 @@ public class GhostMoveToPlayer : MonoBehaviour
             directionG2T.Normalize();
 
             // apply to position
-            transform.position -= (Vector3)directionG2T * 0.004f * 1;
+            transform.position -= (Vector3)directionG2T * 1.5f * Time.deltaTime;
         }
     }
 
@@ -61,14 +61,13 @@ public class GhostMoveToPlayer : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            
-            playerScipt.PlayerTakesDmg(1);
+            playerScript.PlayerTakesDmg(1);
             DisableGhost();
             StartCoroutine(RespawnGhost(1f));
         }
     }
 
-    public void RespawnAferCaught()
+    public void RespawnAfterCaught()
     {
         if (!isSpawned)
         {
@@ -83,12 +82,18 @@ public class GhostMoveToPlayer : MonoBehaviour
         this.ghostCollider.enabled = false; // Disable the Collider2D component
         transform.position = spawner.position;
         isSpawned = false; // Set isSpawned to false
+
+        // Randomize the enemy color
+        if (enemyColorScript != null)
+        {
+            enemyColorScript.RandomizeColor();
+        }
     }
 
-    private IEnumerator RespawnGhost(float Delay)
+    private IEnumerator RespawnGhost(float delay)
     {
         Debug.Log("Starting coroutine");
-        yield return new WaitForSeconds(Delay);
+        yield return new WaitForSeconds(delay);
         Debug.Log("Re-enabling ghost");
 
         if (!isSpawned)

@@ -182,7 +182,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: adb190f124d65e34f9410576a9db58dc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 3.61, y: 6.42}
@@ -315,7 +315,7 @@ Transform:
   m_GameObject: {fileID: 232551268}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0784, y: 4.61, z: 0}
+  m_LocalPosition: {x: 0.0784, y: 4.61, z: 1.28}
   m_LocalScale: {x: 0.65387, y: 0.6585081, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -511,6 +511,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5406949049334218211, guid: 1c12b50817b46704bb71a10761c0a8cf,
+        type: 3}
+      propertyPath: enemyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7654004264236632843, guid: 1c12b50817b46704bb71a10761c0a8cf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -625,6 +630,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 1f2bb4960dff1154eb12de7776c74b8e, type: 2}
+    - target: {fileID: 5406949049334218211, guid: 1c12b50817b46704bb71a10761c0a8cf,
+        type: 3}
+      propertyPath: enemyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7654004264236632843, guid: 1c12b50817b46704bb71a10761c0a8cf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -679,6 +689,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ghost (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9058129475957498140, guid: 1c12b50817b46704bb71a10761c0a8cf,
+        type: 3}
+      propertyPath: speed
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 9058129475957498140, guid: 1c12b50817b46704bb71a10761c0a8cf,
         type: 3}
@@ -966,7 +981,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 26baf3fb5da6cf243b202aafda00aba2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 2.61, y: 4.29}
@@ -1416,7 +1431,7 @@ Transform:
   m_GameObject: {fileID: 1488877410}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.59, y: 7.0357, z: 1.52}
+  m_LocalPosition: {x: 12.59, y: 7.0357, z: 2.31}
   m_LocalScale: {x: 0.65001106, y: 0.31321064, z: 0.32236}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1869,6 +1884,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5406949049334218211, guid: 1c12b50817b46704bb71a10761c0a8cf,
+        type: 3}
+      propertyPath: enemyType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5406949049334218211, guid: 1c12b50817b46704bb71a10761c0a8cf,
+        type: 3}
+      propertyPath: enemyColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5406949049334218211, guid: 1c12b50817b46704bb71a10761c0a8cf,
+        type: 3}
+      propertyPath: enemyColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5406949049334218211, guid: 1c12b50817b46704bb71a10761c0a8cf,
+        type: 3}
+      propertyPath: enemyColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7654004264236632843, guid: 1c12b50817b46704bb71a10761c0a8cf,
         type: 3}
       propertyPath: m_LocalPosition.x
