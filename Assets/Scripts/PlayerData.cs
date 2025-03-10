@@ -14,11 +14,11 @@ public class PlayerData
     public PlayerData()
     {
         // Initialize default values
-        sanity = 100;
+        sanity = 50;
         playerLevel = 1;
-        cleanliness = 100;
-        energy = 100;
-        hunger = 100;
+        cleanliness = 50;
+        energy = 6;
+        hunger = 50;
         unlockedCharacters.Clear();
         unlockedOutfits.Clear();
     }

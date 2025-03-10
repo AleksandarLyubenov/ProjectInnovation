@@ -59,4 +59,12 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+
+    public void StopMovement()
+    {
+        rb.velocity = Vector2.zero;
+        moving = false;
+        targetPosition = transform.position;
+    }
+
 }

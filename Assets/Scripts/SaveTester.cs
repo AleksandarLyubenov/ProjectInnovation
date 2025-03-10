@@ -28,6 +28,7 @@ public class SaveTester : MonoBehaviour
         HandleCharacterUnlock();
         DumpLog();
         HandleResetInput();
+        HandleOutfitUnlock();
     }
 
     void HandleSanityInput()
@@ -134,9 +135,19 @@ public class SaveTester : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.U))
         {
-            string charName = "Character" + Random.Range(1, 3);
+            string charName = "Player";
             SaveManager.Instance.UnlockCharacter(charName);
-            Debug.Log("Unlocked character: " + charName);
+            Debug.Log("Unlocked " + charName);
+            PrintAllStats();
+        }
+    }
+    void HandleOutfitUnlock()
+    {
+        if (Input.GetKeyUp(KeyCode.O))
+        {
+            string charName = "Outfit 2";
+            SaveManager.Instance.UnlockOutfit(charName);
+            Debug.Log("Unlocked outfit: " + charName);
             PrintAllStats();
         }
     }
