@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class PlayerData
 {
     public List<string> unlockedCharacters = new List<string>();
-    public List<string> unlockedOutfits = new List<string>();
+    public List<string> unlockedCosmetics = new List<string>();
     public int sanity = 100;
     public int playerLevel = 1;
     public int cleanliness = 100;
@@ -20,6 +20,6 @@ public class PlayerData
         energy = 6;
         hunger = 50;
         unlockedCharacters.Clear();
-        unlockedOutfits.Clear();
+        unlockedCosmetics.Clear();
     }
 }

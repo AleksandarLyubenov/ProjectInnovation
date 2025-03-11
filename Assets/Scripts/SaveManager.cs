@@ -77,15 +77,16 @@ public class SaveManager : MonoBehaviour
     }
 
     // Outfit methods
-    public bool IsOutfitUnlocked(string outfitName) =>
-        playerData.unlockedOutfits.Contains(outfitName);
+    public bool IsCosmeticUnlocked(string cosmeticId) =>
+        playerData.unlockedCosmetics.Contains(cosmeticId);
 
-    public void UnlockOutfit(string outfitName)
+    public void UnlockCosmetic(string cosmeticId)
     {
-        if (!playerData.unlockedOutfits.Contains(outfitName))
+        if (!playerData.unlockedCosmetics.Contains(cosmeticId))
         {
-            playerData.unlockedOutfits.Add(outfitName);
+            playerData.unlockedCosmetics.Add(cosmeticId);
             SaveData();
+            Debug.Log($"Unlocked cosmetic: {cosmeticId}");
         }
     }
 
@@ -142,6 +143,6 @@ public class SaveManager : MonoBehaviour
     public List<string> GetAllUnlockedCharacters() =>
     new List<string>(playerData.unlockedCharacters);
 
-    public List<string> GetAllUnlockedOutfits() =>
-        new List<string>(playerData.unlockedOutfits);
+    public List<string> GetAllUnlockedCosmetics() =>
+        new List<string>(playerData.unlockedCosmetics);
 }
