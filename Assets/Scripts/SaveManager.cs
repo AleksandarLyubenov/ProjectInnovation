@@ -106,6 +106,20 @@ public class SaveManager : MonoBehaviour
         SaveData();
     }
 
+    public int GetMinigame1HighScore() => playerData.minigame1HighScore;
+    public void SetMinigame1HighScore(int highScore)
+    {
+        playerData.minigame1HighScore = highScore;
+        SaveData();
+    }
+
+    public int GetMinigame2HighScore() => playerData.minigame2HighScore;
+    public void SetMinigame2HighScore(int highScore)
+    {
+        playerData.minigame2HighScore = highScore;
+        SaveData();
+    }
+
     public int GetCleanliness() => playerData.cleanliness;
     public void SetCleanliness(int value)
     {
