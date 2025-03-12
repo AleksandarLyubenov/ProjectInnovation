@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class PlayerDirtSystem : MonoBehaviour
 {
     [Header("Dirt Settings")]
-    [SerializeField] private Image dirtImage;
+    [SerializeField] private SpriteRenderer dirtImage;
     [SerializeField] private float maxDirtAlpha = 0.8f;
 
     [Header("Microphone Settings")]

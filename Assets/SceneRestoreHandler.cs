@@ -13,12 +13,16 @@ public class ScenePlayerManager : MonoBehaviour
     private void Start()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        // Handle initial scene if already loaded
         if (SceneManager.GetActiveScene().name == targetScene)
         {
             StartCoroutine(DelayedSpawnCheck());
         }
     }
+
+    //private void FixedUpdate()
+    //{
+    //    DelayedSpawnCheck();
+    //}
 
     private void OnDestroy()
     {
@@ -35,14 +39,12 @@ public class ScenePlayerManager : MonoBehaviour
 
     IEnumerator DelayedSpawnCheck()
     {
-        // Wait for 1 frame to ensure scene is fully loaded
         yield return null;
         HandlePlayerSpawning();
     }
 
     private void HandlePlayerSpawning()
     {
-        // Use FindWithTag instead of Find for better performance
         GameObject existingPlayer = GameObject.FindWithTag("Player");
 
         if (existingPlayer == null)
@@ -72,7 +74,6 @@ public class ScenePlayerManager : MonoBehaviour
             return;
         }
 
-        // Ensure we're on main thread for instantiate
         StartCoroutine(SpawnPlayerRoutine());
     }
 

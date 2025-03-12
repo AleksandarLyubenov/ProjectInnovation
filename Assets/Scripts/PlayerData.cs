@@ -12,6 +12,7 @@ public class PlayerData
     public int hunger = 100;
     public int minigame1HighScore = 0;
     public int minigame2HighScore = 0;
+    public string equippedCosmetic = "Hat_1";
 
     public PlayerData()
     {
@@ -23,6 +24,7 @@ public class PlayerData
         hunger = 50;
         minigame1HighScore = 0;
         minigame2HighScore = 0;
+        equippedCosmetic = "Hat_1";
         unlockedCharacters.Clear();
         unlockedCosmetics.Clear();
     }

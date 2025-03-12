@@ -25,8 +25,6 @@ public class FlashlightController : MonoBehaviour
     private float originalSpotAngle;
     private Coroutine flashRoutine;
 
-    [SerializeField] private string loadLevel = "GameOverScene";
-
     private void Awake()
     {
         if (Instance == null)
@@ -114,7 +112,7 @@ public class FlashlightController : MonoBehaviour
                         {
                             Debug.Log("Game Over - Passive Ghost Eliminated!");
                             VibrationManager.Instance.StopVibration();
-                            StartCoroutine(LoadGameOverScene());
+                            ghost.DestroyGhost();
                             return;
                         }
                     }
@@ -128,20 +126,6 @@ public class FlashlightController : MonoBehaviour
             StopCoroutine(flashRoutine);
         }
         flashRoutine = StartCoroutine(FlashEffect());
-    }
-
-    private IEnumerator LoadGameOverScene()
-    {
-        VibrationManager.Instance.StopVibration();
-
-        spotlight.enabled = false;
-
-        yield return new WaitForEndOfFrame();
-
-        SceneManager.LoadScene(loadLevel, LoadSceneMode.Single);
-
-        Instance = null;
-        Destroy(gameObject);
     }
 
     private IEnumerator FlashEffect()

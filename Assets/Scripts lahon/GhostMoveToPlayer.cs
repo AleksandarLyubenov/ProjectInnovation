@@ -50,7 +50,7 @@ public class GhostMoveToPlayer : MonoBehaviour
             ghostPos = transform.position;
             targetPos = target.transform.position;
 
-            // ghost pos - target pos (B - A)
+            // ghost pos - t (B - A)
             directionG2T = ghostPos - targetPos;
             // normalize for consistent speed
             directionG2T.Normalize();

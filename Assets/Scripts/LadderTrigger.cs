@@ -36,8 +36,8 @@ public class LadderTrigger : MonoBehaviour
 
     private void MovePlayerAndCamera(PlayerMovement player, Vector3 newPosition, float cameraShift)
     {
-        player.StopMovement();
-        player.transform.position = new Vector3(newPosition.x, newPosition.y, player.transform.position.z);
+        player.Unselect();
+        player.transform.position = new Vector3(newPosition.x, newPosition.y, -5);
         mainCamera.transform.position += new Vector3(0, cameraShift, 0);
     }
 

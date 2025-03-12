@@ -24,8 +24,12 @@ public class DoorTrigger : MonoBehaviour
     private Vector2 offScreenPos;
     private Vector2 onScreenPos;
 
+    private AudioManager audioManager;
+
     private void Start()
     {
+        audioManager = FindAnyObjectByType<AudioManager>();
+
         if (popupTransform == null)
         {
             Debug.LogError("Popup Transform not assigned in DoorTrigger!");
@@ -51,6 +55,11 @@ public class DoorTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
+            if (playerMovement != null)
+            {
+                playerMovement.Unselect();
+            }
             ShowPopup();
         }
     }
@@ -61,6 +70,8 @@ public class DoorTrigger : MonoBehaviour
 
         popupPanel.SetActive(true);
         StartCoroutine(AnimatePanel(onScreenPos));
+
+        audioManager.PlaySound("Popup");
 
         UpdateButtonStates();
     }

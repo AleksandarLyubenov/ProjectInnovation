@@ -10,10 +10,19 @@ public class GhostTransparencyController : MonoBehaviour
     private Vector3 originalPosition;
     private bool isRegistered = false;
 
+    private GhostSpawnHandler spawnHandler;
+    private GameOverHandler gameOverHandler;
+
     void Update()
     {
         UpdateTransparency();
         UpdateVibrationRegistration();
+    }
+
+    public void SetHandlers(GhostSpawnHandler spawnHandler, GameOverHandler gameOverHandler)
+    {
+        this.spawnHandler = spawnHandler;
+        this.gameOverHandler = gameOverHandler;
     }
 
     void Start()
@@ -58,10 +67,35 @@ public class GhostTransparencyController : MonoBehaviour
 
     private float lastAlpha = 0f;
     private const float ALPHA_CHANGE_THRESHOLD = 0.05f;
+    private bool isBeingDestroyed = false;
 
     public void DestroyGhost()
     {
-        Debug.Log($"💀 {name} Destroyed.");
-        Destroy(gameObject);
+        if (isBeingDestroyed) return;
+        isBeingDestroyed = true;
+
+        if (isPassive)
+        {
+            var collider = GetComponent<Collider>();
+            if (collider) collider.enabled = false;
+
+            if (spawnHandler != null)
+            {
+                spawnHandler.ClearExistingGhosts(); // Destroys all ghosts, including this one
+            }
+
+            if (gameOverHandler != null)
+            {
+                gameOverHandler.ShowResults(); // Show game over panel
+            }
+        }
+        else
+        {
+            if (spawnHandler != null)
+            {
+                spawnHandler.OnCorrectGuess();
+            }
+            Destroy(gameObject);
+        }
     }
 }

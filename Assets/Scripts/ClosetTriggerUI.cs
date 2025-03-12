@@ -36,6 +36,8 @@ public class ClosetTrigger : MonoBehaviour
     private bool isAnimating;
     private bool isOpen;
 
+    private PlayerMovement playerMovement;
+
     private void Start()
     {
         FindPlayer();
@@ -74,6 +76,12 @@ public class ClosetTrigger : MonoBehaviour
         isOpen = true;
         mainUI.SetActive(false);
         closetPanel.gameObject.SetActive(true);
+
+        if (playerMovement != null)
+        {
+            playerMovement.Unselect();
+        }
+
         StartCoroutine(AnimatePanel(offScreenPos, onScreenPos));
     }
 
@@ -112,6 +120,8 @@ public class ClosetTrigger : MonoBehaviour
 
         if (player != null)
         {
+            playerMovement = player.GetComponent<PlayerMovement>();
+
             hat1Object = player.transform.Find(hat1Path)?.gameObject;
             hat2Object = player.transform.Find(hat2Path)?.gameObject;
             hat3Object = player.transform.Find(hat3Path)?.gameObject;
@@ -145,20 +155,27 @@ public class ClosetTrigger : MonoBehaviour
 
     void SelectHat(int hatNumber)
     {
-        DeactivateAllHats(); // First, disable all hats
+        DeactivateAllHats();
+        string equippedId = hat1Id; // Default to hat1
 
         switch (hatNumber)
         {
             case 1:
                 ActivateHat(hat1Object);
+                equippedId = hat1Id;
                 break;
             case 2 when SaveManager.Instance.IsCosmeticUnlocked(hat2Id):
                 ActivateHat(hat2Object);
+                equippedId = hat2Id;
                 break;
             case 3 when SaveManager.Instance.IsCosmeticUnlocked(hat3Id):
                 ActivateHat(hat3Object);
+                equippedId = hat3Id;
                 break;
         }
+
+        // Save the equipped cosmetic
+        SaveManager.Instance.SetEquippedCosmetic(equippedId);
     }
 
     void DeactivateAllHats()

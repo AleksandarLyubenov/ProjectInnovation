@@ -21,7 +21,7 @@ public class NfcReader : MonoBehaviour
 
     [Header("Character UID Scriptable Objects")]
     [SerializeField] private NFCTagUID Character1UIDs;
-    [SerializeField] private NFCTagUID Character2UIDs;
+    //[SerializeField] private NFCTagUID Character2UIDs;
 
     [Header("Character Materials")]
     [SerializeField] private Material Character1Material;
@@ -116,35 +116,8 @@ public class NfcReader : MonoBehaviour
         GameObject prefabToSpawn = null;
         bool isOutfit = false;
 
-        // Check Character 1 tags
-        foreach (var tag in Character1UIDs.tagData)
-        {
-            if (tag.uid == tagIdString)
-            {
-                itemName = tag.itemName;
-                prefabToSpawn = char1Prefab;
-                Debug.Log($"[NFC] Matched Character1 tag: {itemName}");
-                break;
-            }
-        }
-
-        // Check Character 2 tags
-        if (prefabToSpawn == null)
-        {
-            foreach (var tag in Character2UIDs.tagData)
-            {
-                if (tag.uid == tagIdString)
-                {
-                    itemName = tag.itemName;
-                    prefabToSpawn = char2Prefab;
-                    Debug.Log($"[NFC] Matched Character2 tag: {itemName}");
-                    break;
-                }
-            }
-        }
-
-        // Check Outfit tags
-        if (prefabToSpawn == null && OutfitUIDs != null)
+        // First check for outfit tags
+        if (OutfitUIDs != null)
         {
             foreach (var tag in OutfitUIDs.tagData)
             {
@@ -154,20 +127,27 @@ public class NfcReader : MonoBehaviour
                     isOutfit = true;
                     Debug.Log($"[NFC] Matched Outfit tag: {itemName}");
                     HandleOutfitUnlock(itemName);
-                    return;
+                    return; // Exit after handling outfit
                 }
             }
         }
 
-        if (prefabToSpawn != null)
+        // Then check character tags
+        foreach (var tag in Character1UIDs.tagData)
         {
-            HandleCharacterUnlock(itemName, prefabToSpawn);
+            if (tag.uid == tagIdString)
+            {
+                itemName = tag.itemName;
+                prefabToSpawn = char1Prefab;
+                Debug.Log($"[NFC] Matched Character tag: {itemName}");
+                HandleCharacterUnlock(itemName, prefabToSpawn);
+                return; // Exit after handling character
+            }
         }
-        else if (!isOutfit)
-        {
-            Debug.LogWarning($"[NFC] No matching configuration found for tag: {tagIdString}");
-            onNFCError.Invoke();
-        }
+
+        // If no matches found
+        Debug.LogWarning($"[NFC] No matching configuration found for tag: {tagIdString}");
+        onNFCError.Invoke();
     }
 
     private void HandleCharacterUnlock(string itemName, GameObject prefab)

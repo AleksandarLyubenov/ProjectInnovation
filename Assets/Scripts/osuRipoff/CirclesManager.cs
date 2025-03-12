@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class CirclesManager : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class CirclesManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI contextText;
     [SerializeField] private Button closeButton;
 
+    [Header("Pizza Visualization")]
+    [SerializeField] private GameObject[] pizzaStates; // 0-Full, 1-1/3, 2-2/3, 3-Empty
+    [SerializeField] private Transform pizzaDisplayParent;
+
     private bool isMinigameActive;
     public bool IsMinigameActive => isMinigameActive;
     private Vector2 lastSpawnPosition;
@@ -26,16 +31,74 @@ public class CirclesManager : MonoBehaviour
 
     [SerializeField] private float circleZPosition = -5f;
 
+    [Header("Debugging Fields (Remove [SerializeField] before publish!")]
+    [SerializeField] private GameObject player;
+    [SerializeField] private bool hasPlayerReference;
+
+    [SerializeField] private AudioManager audioManager;
+
     void Start()
     {
+        audioManager = FindAnyObjectByType<AudioManager>();
         resultPanel.SetActive(false);
         closeButton.onClick.AddListener(CloseResultPanel);
     }
+    void OnEnable()
+    {
+        PlayerPresenceNotifier.Instance.OnPlayerFound.AddListener(StorePlayerReference);
+        PlayerPresenceNotifier.Instance.OnPlayerLost.AddListener(ClearPlayerReference);
+        StartCoroutine(InitializeWhenReady());
+    }
+
+    private IEnumerator InitializeWhenReady()
+    {
+        while (PlayerPresenceNotifier.Instance == null)
+        {
+            yield return null;
+        }
+
+        PlayerPresenceNotifier.Instance.OnPlayerFound.AddListener(StorePlayerReference);
+        PlayerPresenceNotifier.Instance.OnPlayerLost.AddListener(ClearPlayerReference);
+    }
+
+    void OnDisable()
+    {
+        PlayerPresenceNotifier.Instance.OnPlayerFound.RemoveListener(StorePlayerReference);
+        PlayerPresenceNotifier.Instance.OnPlayerLost.RemoveListener(ClearPlayerReference);
+    }
+
+    void StorePlayerReference()
+    {
+        player = PlayerPresenceNotifier.Instance.GetPlayer();
+        hasPlayerReference = true;
+    }
+
+    void ClearPlayerReference()
+    {
+        player = null;
+        hasPlayerReference = false;
+    }
+
     public void StartMinigame()
     {
         if (isMinigameActive) return;
 
-        // Reset counters
+        player = FindPlayerClone();
+
+        if (player != null)
+        {
+            player.SetActive(false);
+        }
+
+        // Reset pizza display
+        foreach (Transform child in pizzaDisplayParent)
+        {
+            child.gameObject.SetActive(false);
+        }
+        pizzaDisplayParent.gameObject.SetActive(true);
+        pizzaStates[0].SetActive(true);
+
+        // Existing start code...
         successfulHits = 0;
         circlesRemaining = circlesTotal;
 
@@ -46,8 +109,19 @@ public class CirclesManager : MonoBehaviour
 
     public void ReportCircleResult(bool success)
     {
-        if (success) successfulHits++;
+        if (success)
+        {
+            successfulHits++;
+            audioManager.PlaySound("Eat");
+        }
+        else
+        {
+            audioManager.PlaySound("EatFail");
+        }
+
         circlesRemaining--;
+
+        UpdatePizzaDisplay(); // Update visualization after each circle
 
         if (circlesRemaining > 0)
         {
@@ -57,6 +131,19 @@ public class CirclesManager : MonoBehaviour
         {
             EndMinigame();
         }
+    }
+
+    void UpdatePizzaDisplay()
+    {
+        // Deactivate all pizza states
+        foreach (GameObject state in pizzaStates)
+        {
+            state.SetActive(false);
+        }
+
+        // Activate appropriate state based on success count
+        int stateIndex = Mathf.Clamp(successfulHits, 0, pizzaStates.Length - 1);
+        pizzaStates[stateIndex].SetActive(true);
     }
 
     void HandleCircleTap()
@@ -143,13 +230,34 @@ public class CirclesManager : MonoBehaviour
     void ShowResultPanel()
     {
         contextText.text = $"You restored {hungerIncrease}% hunger!";
+        audioManager.PlaySound("Popup");
         resultPanel.SetActive(true);
         resultPanel.GetComponent<PanelAnimator>().ShowPanel();
+    }
+
+    private GameObject FindPlayerClone()
+    {
+        foreach (GameObject go in Resources.FindObjectsOfTypeAll<GameObject>())
+        {
+            if (go.name == "Player(Clone)" && go.scene.isLoaded)
+            {
+                return go;
+            }
+        }
+        return null;
     }
 
     void CloseResultPanel()
     {
         resultPanel.GetComponent<PanelAnimator>().HidePanel();
         mainUI.SetActive(true);
+        pizzaDisplayParent.gameObject.SetActive(false); // Hide pizza when closing results
+
+        player = FindPlayerClone();
+
+        if (player != null)
+        {
+            player.SetActive(true);
+        }
     }
 }

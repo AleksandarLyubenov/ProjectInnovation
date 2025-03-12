@@ -2,6 +2,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using System.Collections.Generic;
+using TMPro;
 
 public class SaveManager : MonoBehaviour
 {
@@ -15,6 +16,11 @@ public class SaveManager : MonoBehaviour
     public event Action OnCleanlinessChanged;
     public event Action OnHungerChanged;
 
+    [Header("Debug")]
+    [SerializeField] private bool debugMode = true;
+    [SerializeField]
+    private TextMeshProUGUI debugText;
+
     private void Awake()
     {
         if (Instance == null)
@@ -22,6 +28,14 @@ public class SaveManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             savePath = Application.persistentDataPath + "/playerData.json";
+
+            if (debugMode)
+            {
+                Debug.Log("Persistent Data Path: " + savePath);
+                // Optional: Display path in UI
+                if (debugText != null) debugText.text = "Save Path: " + savePath;
+            }
+
             LoadData();
         }
         else
@@ -45,22 +59,45 @@ public class SaveManager : MonoBehaviour
 
     private void LoadData()
     {
-        if (File.Exists(savePath))
+        try
         {
-            string json = File.ReadAllText(savePath);
-            playerData = JsonUtility.FromJson<PlayerData>(json);
+            if (File.Exists(savePath))
+            {
+                string json = File.ReadAllText(savePath);
+                playerData = JsonUtility.FromJson<PlayerData>(json);
+
+                if (debugMode) Debug.Log("Loaded data: " + json);
+            }
+            else
+            {
+                if (debugMode) Debug.Log("No save file found, creating new");
+                playerData = new PlayerData();
+                SaveData();
+            }
         }
-        else
+        catch (Exception e)
         {
-            playerData = new PlayerData();
-            SaveData();
+            Debug.LogError("Load failed: " + e.Message);
         }
     }
 
     public void SaveData()
     {
-        string json = JsonUtility.ToJson(playerData);
-        File.WriteAllText(savePath, json);
+        try
+        {
+            string json = JsonUtility.ToJson(playerData);
+            File.WriteAllText(savePath, json);
+
+            if (debugMode)
+            {
+                Debug.Log("Saved data: " + json);
+                Debug.Log("File location: " + savePath);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Save failed: " + e.Message);
+        }
     }
 
     // Character methods
@@ -77,6 +114,21 @@ public class SaveManager : MonoBehaviour
     }
 
     // Outfit methods
+    public string GetEquippedCosmetic() => playerData.equippedCosmetic;
+
+    public void SetEquippedCosmetic(string cosmeticId)
+    {
+        if (IsCosmeticUnlocked(cosmeticId) || cosmeticId == "Hat_1")
+        {
+            playerData.equippedCosmetic = cosmeticId;
+            SaveData();
+        }
+        else
+        {
+            Debug.LogWarning($"Tried to equip locked cosmetic: {cosmeticId}");
+        }
+    }
+
     public bool IsCosmeticUnlocked(string cosmeticId) =>
         playerData.unlockedCosmetics.Contains(cosmeticId);
 
@@ -159,4 +211,6 @@ public class SaveManager : MonoBehaviour
 
     public List<string> GetAllUnlockedCosmetics() =>
         new List<string>(playerData.unlockedCosmetics);
+
+
 }
