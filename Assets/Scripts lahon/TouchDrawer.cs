@@ -11,10 +11,13 @@ public class TouchDrawer : MonoBehaviour
     private PolygonCollider2D polygonCollider;
 
     public LayerMask lineLayerMask;
+    private bool isGameOver = false;
 
     // Update is called once per frame
     void Update()
     {
+        if (isGameOver) return;
+
         if (Input.GetMouseButtonDown(0))
         {
             StartLine();
@@ -108,6 +111,11 @@ public class TouchDrawer : MonoBehaviour
             polygonCollider = this.currentLine.gameObject.AddComponent<PolygonCollider2D>();
         }
         this.polygonCollider.SetPath(0, points.ToArray());
+    }
+
+    public void DisableDrawing()
+    {
+        isGameOver = true;
     }
 
     private void OnDrawGizmos()
