@@ -5,17 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitch : MonoBehaviour
 {
-    [SerializeField] string sceneToSwitchTo = "Alex's Scene";
+    [SerializeField] private string DirectedScene;
 
-    void Update()
-    {
-        StartCoroutine(SceneSwitchDelay(5f));
-    }
+ /*   int currentEnergy = SaveManager.Instance.GetEnergy();
+    int currentLevel = SaveManager.Instance.GetPlayerLevel();*/
 
-    private IEnumerator SceneSwitchDelay(float delay)
+    public void Back2MenuButton()
     {
-        Debug.Log("scenes are switching in: " + delay);
-        yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(sceneToSwitchTo);
+        SceneManager.LoadScene(DirectedScene);
     }
 }

@@ -5,14 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private GameObject GameOverPanel;
     [SerializeField] private string switchSceneTo;
-
     private int health;
+
+    private GhostMoveToPlayer[] ghosts;
+    private TouchDrawer touchDrawer;
 
     // Start is called before the first frame update
     void Start()
     {
+        GameOverPanel.SetActive(false);
         health = 5;
+        ghosts = FindObjectsOfType<GhostMoveToPlayer>();
+        touchDrawer = FindObjectOfType<TouchDrawer>();
     }
 
     // Update is called once per frame
@@ -30,9 +36,29 @@ public class Player : MonoBehaviour
     {
         if (health <= 0)
         {
-            SwitchScene(switchSceneTo);
+            GameOverPanel.SetActive(true);
+            DisableGhosts();
+            DisableDrawing();
         }
     }
+
+    private void DisableGhosts()
+    {
+        foreach (var ghost in ghosts)
+        {
+            ghost.DisableGhost();
+            ghost.StopMovement();
+        }
+    }
+
+    private void DisableDrawing()
+    {
+        if (touchDrawer != null)
+        {
+            touchDrawer.DisableDrawing();
+        }
+    }
+
     private void SwitchScene(string directedScene)
     {
         SceneManager.LoadScene(directedScene);

@@ -21,6 +21,7 @@ public class GhostMoveToPlayer : MonoBehaviour
     private Vector2 directionG2T;
 
     public bool isSpawned = true;
+    private bool isGameOver = false;
 
     public void Start()
     {
@@ -32,6 +33,8 @@ public class GhostMoveToPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isGameOver) return;
+
         Debug.Log(isSpawned);
         LockPosition();
         TrackingPlayer();
@@ -88,6 +91,11 @@ public class GhostMoveToPlayer : MonoBehaviour
         {
             enemyColorScript.RandomizeColor();
         }
+    }
+
+    public void StopMovement()
+    {
+        isGameOver = true;
     }
 
     private IEnumerator RespawnGhost(float delay)
