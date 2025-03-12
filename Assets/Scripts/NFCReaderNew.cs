@@ -192,7 +192,7 @@ public class NfcReader : MonoBehaviour
     {
         Debug.Log($"[NFC] Handling outfit unlock for: {outfitName}");
 
-        if (SaveManager.Instance.IsOutfitUnlocked(outfitName))
+        if (SaveManager.Instance.IsCosmeticUnlocked(outfitName))
         {
             Debug.Log($"[NFC] Outfit already unlocked: {outfitName}");
             onNFCAlreadyUnlocked.Invoke(outfitName);
@@ -200,14 +200,14 @@ public class NfcReader : MonoBehaviour
         else
         {
             Debug.Log($"[NFC] Unlocking new outfit: {outfitName}");
-            SaveManager.Instance.UnlockOutfit(outfitName);
+            SaveManager.Instance.UnlockCosmetic(outfitName);
 
             // Update closet UI
             ClosetTrigger closet = FindObjectOfType<ClosetTrigger>();
             if (closet != null)
             {
                 Debug.Log($"[NFC] Found closet trigger, updating UI");
-                closet.RefreshOutfitDisplay();
+                closet.RefreshCosmeticDisplay();
             }
             else
             {

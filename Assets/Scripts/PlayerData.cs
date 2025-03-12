@@ -4,12 +4,14 @@ using System.Collections.Generic;
 public class PlayerData
 {
     public List<string> unlockedCharacters = new List<string>();
-    public List<string> unlockedOutfits = new List<string>();
+    public List<string> unlockedCosmetics = new List<string>();
     public int sanity = 100;
     public int playerLevel = 1;
     public int cleanliness = 100;
     public int energy = 100;
     public int hunger = 100;
+    public int minigame1HighScore = 0;
+    public int minigame2HighScore = 0;
 
     public PlayerData()
     {
@@ -19,7 +21,9 @@ public class PlayerData
         cleanliness = 50;
         energy = 6;
         hunger = 50;
+        minigame1HighScore = 0;
+        minigame2HighScore = 0;
         unlockedCharacters.Clear();
-        unlockedOutfits.Clear();
+        unlockedCosmetics.Clear();
     }
 }

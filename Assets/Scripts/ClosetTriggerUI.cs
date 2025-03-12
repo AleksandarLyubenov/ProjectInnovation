@@ -10,17 +10,26 @@ public class ClosetTrigger : MonoBehaviour
     [SerializeField] private RectTransform closetPanel;
     [SerializeField] private Button closetButton;
     [SerializeField] private Button closeButton;
-    [SerializeField] private Button outfit1Button;
-    [SerializeField] private Button outfit2Button;
+    [SerializeField] private Button hat1Button;
+    [SerializeField] private Button hat2Button;
+    [SerializeField] private Button hat3Button;
 
-    [Header("Player Settings")]
+    [Header("Object Paths (Player Hierarchy)")]
     [SerializeField] private string playerTag = "Player";
-    [SerializeField] private string outfit1Path = "Canvas/Outfit 1";
-    [SerializeField] private string outfit2Path = "Canvas/Outfit 2";
+    [SerializeField] private string hat1Path = "Canvas/Hat_1";
+    [SerializeField] private string hat2Path = "Canvas/Hat_2";
+    [SerializeField] private string hat3Path = "Canvas/Hat_3";
+
+    [Header("Cosmetic IDs (Save/Load)")]
+    [SerializeField] private string hat1Id = "Hat_1";
+    [SerializeField] private string hat2Id = "Hat_2";
+    [SerializeField] private string hat3Id = "Hat_3";
 
     private GameObject player;
-    private GameObject outfit1Object;
-    private GameObject outfit2Object;
+
+    private GameObject hat1Object;
+    private GameObject hat2Object;
+    private GameObject hat3Object;
 
     private Vector2 onScreenPos;
     private Vector2 offScreenPos;
@@ -32,7 +41,7 @@ public class ClosetTrigger : MonoBehaviour
         FindPlayer();
         InitializePositions();
         SetupButtonListeners();
-        UpdateOutfitDisplay();
+        UpdateCosmeticDisplay();
     }
 
     void InitializePositions()
@@ -47,8 +56,9 @@ public class ClosetTrigger : MonoBehaviour
     {
         closetButton.onClick.AddListener(ToggleCloset);
         closeButton.onClick.AddListener(ToggleCloset);
-        outfit1Button.onClick.AddListener(() => SelectOutfit(1));
-        outfit2Button.onClick.AddListener(() => SelectOutfit(2));
+        hat1Button.onClick.AddListener(() => SelectHat(1));
+        hat2Button.onClick.AddListener(() => SelectHat(2));
+        hat3Button.onClick.AddListener(() => SelectHat(3));
     }
 
     public void ToggleCloset()
@@ -76,25 +86,25 @@ public class ClosetTrigger : MonoBehaviour
         }));
     }
 
-    public void RefreshOutfitDisplay()
+    public void RefreshCosmeticDisplay()
     {
-        Debug.Log("[CLOSET] Refreshing outfit display");
-        bool isUnlocked = SaveManager.Instance.IsOutfitUnlocked("Outfit 2");
-        Debug.Log($"[CLOSET] Outfit 2 unlocked status: {isUnlocked}");
-
-        // Update UI immediately
-        outfit2Button.gameObject.SetActive(isUnlocked);
-
-        // Force UI layout rebuild
-        LayoutRebuilder.ForceRebuildLayoutImmediate(
-            closetPanel.GetComponent<RectTransform>()
-        );
+        hat2Button.gameObject.SetActive(SaveManager.Instance.IsCosmeticUnlocked(hat2Id));
+        hat3Button.gameObject.SetActive(SaveManager.Instance.IsCosmeticUnlocked(hat3Id));
+        LayoutRebuilder.ForceRebuildLayoutImmediate(closetPanel.GetComponent<RectTransform>());
     }
 
-    void UpdateOutfitDisplay()
+    void UpdateCosmeticDisplay()
     {
-        outfit2Button.gameObject.SetActive(SaveManager.Instance.IsOutfitUnlocked("Outfit 2"));
+        Debug.Log($"Hat 2 Unlocked: {SaveManager.Instance.IsCosmeticUnlocked(hat2Id)}");
+        Debug.Log($"Hat 2 Path: {hat2Path} | Object Found: {hat2Object != null}");
+
+        Debug.Log($"Hat 3 Unlocked: {SaveManager.Instance.IsCosmeticUnlocked(hat3Id)}");
+        Debug.Log($"Hat 3 Path: {hat3Path} | Object Found: {hat3Object != null}");
+
+        hat2Button.gameObject.SetActive(SaveManager.Instance.IsCosmeticUnlocked(hat2Id));
+        hat3Button.gameObject.SetActive(SaveManager.Instance.IsCosmeticUnlocked(hat3Id));
     }
+
 
     void FindPlayer()
     {
@@ -102,15 +112,18 @@ public class ClosetTrigger : MonoBehaviour
 
         if (player != null)
         {
-            outfit1Object = player.transform.Find(outfit1Path)?.gameObject;
-            outfit2Object = player.transform.Find(outfit2Path)?.gameObject;
+            hat1Object = player.transform.Find(hat1Path)?.gameObject;
+            hat2Object = player.transform.Find(hat2Path)?.gameObject;
+            hat3Object = player.transform.Find(hat3Path)?.gameObject;
 
-            if (outfit1Object == null || outfit2Object == null)
+
+            if (hat1Object == null || hat2Object == null || hat3Object == null)
             {
                 Debug.LogError("Could not find outfit objects on player!");
                 Debug.Log($"Player found: {player != null}");
-                Debug.Log($"Outfit1 exists: {outfit1Object != null}");
-                Debug.Log($"Outfit2 exists: {outfit2Object != null}");
+                Debug.Log($"Hat 1 exists: {hat1Object != null}");
+                Debug.Log($"Hat 2 exists: {hat2Object != null}");
+                Debug.Log($"Hat 3 exists: {hat3Object != null}");
             }
         }
         else
@@ -130,30 +143,38 @@ public class ClosetTrigger : MonoBehaviour
         FindPlayer(); // Recursively setup outfits once player is found
     }
 
-    void SelectOutfit(int outfitNumber)
+    void SelectHat(int hatNumber)
     {
-        if (outfit1Object == null || outfit2Object == null)
-        {
-            Debug.LogWarning("Outfit objects not initialized!");
-            return;
-        }
+        DeactivateAllHats(); // First, disable all hats
 
-        outfit1Object.SetActive(false);
-        outfit2Object.SetActive(false);
-
-        switch (outfitNumber)
+        switch (hatNumber)
         {
             case 1:
-                outfit1Object.SetActive(true);
-                Debug.Log("Activated Outfit 1");
+                ActivateHat(hat1Object);
                 break;
-            case 2:
-                if (SaveManager.Instance.IsOutfitUnlocked("Outfit 2"))
-                {
-                    outfit2Object.SetActive(true);
-                    Debug.Log("Activated Outfit 2");
-                }
+            case 2 when SaveManager.Instance.IsCosmeticUnlocked(hat2Id):
+                ActivateHat(hat2Object);
                 break;
+            case 3 when SaveManager.Instance.IsCosmeticUnlocked(hat3Id):
+                ActivateHat(hat3Object);
+                break;
+        }
+    }
+
+    void DeactivateAllHats()
+    {
+        // Disable all hat GameObjects
+        if (hat1Object != null) hat1Object.SetActive(false);
+        if (hat2Object != null) hat2Object.SetActive(false);
+        if (hat3Object != null) hat3Object.SetActive(false);
+    }
+
+    void ActivateHat(GameObject hatObject)
+    {
+        if (hatObject != null)
+        {
+            hatObject.SetActive(true);
+            Debug.Log($"Activated hat: {hatObject.name}");
         }
     }
 
@@ -175,6 +196,6 @@ public class ClosetTrigger : MonoBehaviour
         onComplete?.Invoke();
 
         // Force UI update after animation
-        RefreshOutfitDisplay();
+        RefreshCosmeticDisplay();
     }
 }

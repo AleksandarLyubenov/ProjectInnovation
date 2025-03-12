@@ -29,6 +29,7 @@ public class SaveTester : MonoBehaviour
         DumpLog();
         HandleResetInput();
         HandleOutfitUnlock();
+        HandleOutfit2Unlock();
     }
 
     void HandleSanityInput()
@@ -145,8 +146,19 @@ public class SaveTester : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.O))
         {
-            string charName = "Outfit 2";
-            SaveManager.Instance.UnlockOutfit(charName);
+            string charName = "Hat_2";
+            SaveManager.Instance.UnlockCosmetic(charName);
+            Debug.Log("Unlocked outfit: " + charName);
+            PrintAllStats();
+        }
+    }
+
+    void HandleOutfit2Unlock()
+    {
+        if (Input.GetKeyUp(KeyCode.I))
+        {
+            string charName = "Hat_3";
+            SaveManager.Instance.UnlockCosmetic(charName);
             Debug.Log("Unlocked outfit: " + charName);
             PrintAllStats();
         }
@@ -154,7 +166,7 @@ public class SaveTester : MonoBehaviour
 
     void DumpLog()
     {
-        if (Input.GetKeyUp(KeyCode.Tilde))
+        if (Input.GetKeyUp(KeyCode.Z))
         {
             PrintAllStats();
         }
@@ -170,7 +182,7 @@ public class SaveTester : MonoBehaviour
             $"Hunger: {SaveManager.Instance.GetHunger()}\n" +
             $"Player Level: {SaveManager.Instance.GetPlayerLevel()}\n" +
             $"Unlocked Characters: {string.Join(", ", SaveManager.Instance.GetAllUnlockedCharacters())}\n" +
-            $"Unlocked Outfits: {string.Join(", ", SaveManager.Instance.GetAllUnlockedOutfits())}\n" +
+            $"Unlocked Outfits: {string.Join(", ", SaveManager.Instance.GetAllUnlockedCosmetics())}\n" +
             "-----------------------------"
         );
     }
