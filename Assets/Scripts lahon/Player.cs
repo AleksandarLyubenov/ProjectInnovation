@@ -51,13 +51,14 @@ public class Player : MonoBehaviour
     {
         if (health <= 0)
         {
+            gameIsOver = true;
             GameOverPanel.SetActive(true);
             livesAndScorePanel.SetActive(false);
-            alivePlayer.SetActive(false);
-            deadPlayer.SetActive(true);
             DisableGhosts();
             DisableDrawing();
-            gameIsOver = true;
+
+            deadPlayer.SetActive(true);
+            alivePlayer.SetActive(false);
         }
     }
 

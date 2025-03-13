@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -10,18 +11,22 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private TMP_Text sanityText;
     [SerializeField] private TMP_Text hungerText;
     [SerializeField] private TMP_Text cleanlinessText;
+    [SerializeField] private TMP_Text finalScoreText;
+
+    [SerializeField] private GameObject HighScoreMSG;
 
     private int score = 0;
-    private int sanityGained = -5;
     [SerializeField] private int scoreDividerForExp = 5;
-
-    private int hungerLost = -1;
-    private int cleanlineLost = -2;
+    [Header("Stat Change")]
+    [SerializeField] private int sanityGained;
+    [SerializeField] private int hungerLost;
+    [SerializeField] private int cleanlineLost;
     private float defaultSpeed = 1.5f;
     private float enemySpeedIncrement = 0.25f;
     private float survivalTime = 0f;
 
     private bool isGameOver = false;
+    private bool isNewHighScore;
 
     private GhostMoveToPlayer[] ghosts;
     private TouchDrawer touchDrawer;
@@ -32,6 +37,10 @@ public class ScoreManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        hungerLost = -1; 
+        cleanlineLost = -2;
+        sanityGained = -5;
+
         score = 0;
         ghosts = FindObjectsOfType<GhostMoveToPlayer>();
         touchDrawer = FindObjectOfType<TouchDrawer>();
@@ -43,6 +52,7 @@ public class ScoreManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+            Debug.Log("gamestate is: " + player.gameIsOver);
         if (player.gameIsOver == true)
         {
             GameOver();
@@ -50,6 +60,11 @@ public class ScoreManager : MonoBehaviour
         if (!isGameOver)
         {
             survivalTime += Time.deltaTime;
+        }
+
+        if (score > SaveManager.Instance.GetMinigame1HighScore())
+        {
+            isNewHighScore = true;
         }
     }
 
@@ -91,8 +106,21 @@ public class ScoreManager : MonoBehaviour
         DisplaySanityGained();
         DisplayHungerLost();
         DisplayCleanlinessLost();
+        DisplayFinalScore();
+
         DisableGhosts();
         DisableDrawing();
+
+        if (isNewHighScore)
+        {
+            SaveManager.Instance.SetMinigame1HighScore(score);
+            HighScoreMSG.SetActive(true);
+        }
+        else
+        {
+            HighScoreMSG.SetActive(false);
+        }
+
         SaveManager.Instance.SetHunger(SaveManager.Instance.GetHunger() - hungerLost);
         SaveManager.Instance.SetCleanliness(SaveManager.Instance.GetCleanliness() - cleanlineLost);
         SaveManager.Instance.SetSanity(SaveManager.Instance.GetSanity() + sanityGained);
@@ -136,6 +164,12 @@ public class ScoreManager : MonoBehaviour
         {
             hungerText.text = $"{hungerLost}%";
         }
+    }
+    
+    private void DisplayFinalScore()
+    {
+        if (finalScoreText != null)
+            finalScoreText.text = $"Score: {score}";
     }
 
     private void DisplayCleanlinessLost()

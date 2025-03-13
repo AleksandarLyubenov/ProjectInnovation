@@ -123,7 +123,6 @@ public class TouchDrawer : MonoBehaviour
     public void DisableDrawing()
     {
         isGameOver = true;
-        Destroy(this.currentLine.gameObject);
     }
 
     private void OnDrawGizmos()
