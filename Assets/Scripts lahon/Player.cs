@@ -1,12 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private GameObject GameOverPanel;
+    [SerializeField] private GameObject livesAndScorePanel;
+
+    [SerializeField] private GameObject alivePlayer;
+    [SerializeField] private GameObject deadPlayer;
+
     [SerializeField] private string switchSceneTo;
+
+
+    [SerializeField] private TMP_Text livesText;
 
     [HideInInspector] public bool gameIsOver;
 
@@ -20,6 +29,7 @@ public class Player : MonoBehaviour
     {
         gameIsOver = false;
         GameOverPanel.SetActive(false);
+        livesAndScorePanel.SetActive(true);
         health = 5;
         ghosts = FindObjectsOfType<GhostMoveToPlayer>();
         touchDrawer = FindObjectOfType<TouchDrawer>();
@@ -29,6 +39,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         GameOver();
+        livesText.text = $"Lives: {health}";
     }
 
     public void PlayerTakesDmg(int dmgAmount)
@@ -41,6 +52,9 @@ public class Player : MonoBehaviour
         if (health <= 0)
         {
             GameOverPanel.SetActive(true);
+            livesAndScorePanel.SetActive(false);
+            alivePlayer.SetActive(false);
+            deadPlayer.SetActive(true);
             DisableGhosts();
             DisableDrawing();
             gameIsOver = true;

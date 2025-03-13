@@ -134,7 +134,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (hungerText != null)
         {
-            hungerText.text = $"+{hungerLost}%";
+            hungerText.text = $"{hungerLost}%";
         }
     }
 
@@ -142,7 +142,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (cleanlinessText != null)
         {
-            cleanlinessText.text = $"+{cleanlineLost}%";
+            cleanlinessText.text = $"{cleanlineLost}%";
         }
     }
 

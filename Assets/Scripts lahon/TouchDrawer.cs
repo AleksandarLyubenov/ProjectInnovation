@@ -82,7 +82,7 @@ public class TouchDrawer : MonoBehaviour
                 }
             }
         }
-
+         
         Destroy(this.currentLine.gameObject);
     }
 
@@ -123,6 +123,7 @@ public class TouchDrawer : MonoBehaviour
     public void DisableDrawing()
     {
         isGameOver = true;
+        Destroy(this.currentLine.gameObject);
     }
 
     private void OnDrawGizmos()
