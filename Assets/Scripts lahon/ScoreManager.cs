@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SocialPlatforms.Impl;
+using System.Net;
+using Unity.VisualScripting;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -15,7 +17,7 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] private GameObject HighScoreMSG;
 
-    private int score = 0;
+    [SerializeField] private int score = 0;
     [SerializeField] private int scoreDividerForExp = 5;
     [Header("Stat Change")]
     [SerializeField] private int sanityGained;
@@ -24,6 +26,9 @@ public class ScoreManager : MonoBehaviour
     private float defaultSpeed = 1.5f;
     private float enemySpeedIncrement = 0.25f;
     private float survivalTime = 0f;
+
+    [Header("Reference to Self")]
+    [SerializeField] private GameObject referenceToSelf;
 
     private bool isGameOver = false;
     private bool isNewHighScore;
@@ -37,10 +42,11 @@ public class ScoreManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        hungerLost = -1; 
-        cleanlineLost = -2;
-        sanityGained = -5;
+        //hungerLost = -1; 
+        //cleanlineLost = -2;
+        //sanityGained = -5;
 
+        isGameOver = false;
         score = 0;
         ghosts = FindObjectsOfType<GhostMoveToPlayer>();
         touchDrawer = FindObjectOfType<TouchDrawer>();
@@ -52,7 +58,7 @@ public class ScoreManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            Debug.Log("gamestate is: " + player.gameIsOver);
+        Debug.Log("gamestate is: " + player.gameIsOver);
         if (player.gameIsOver == true)
         {
             GameOver();
@@ -61,10 +67,13 @@ public class ScoreManager : MonoBehaviour
         {
             survivalTime += Time.deltaTime;
         }
-
         if (score > SaveManager.Instance.GetMinigame1HighScore())
         {
             isNewHighScore = true;
+        }
+        if (isGameOver) 
+        {
+            referenceToSelf.SetActive(false);
         }
     }
 
@@ -75,9 +84,9 @@ public class ScoreManager : MonoBehaviour
             yield return new WaitForSeconds(5f);
             if (!isGameOver)
             {
-                sanityGained += 1;
-                hungerLost -= 2;
-                cleanlineLost -= 3;
+                //sanityGained += 1;
+                //hungerLost -= 2;
+                //cleanlineLost -= 3;
                 IncreaseEnemySpeed();
             }
         }
@@ -103,10 +112,6 @@ public class ScoreManager : MonoBehaviour
             StopCoroutine(sanityCoroutine);
         }
         CalculateSanityGained();
-        DisplaySanityGained();
-        DisplayHungerLost();
-        DisplayCleanlinessLost();
-        DisplayFinalScore();
 
         DisableGhosts();
         DisableDrawing();
@@ -121,29 +126,46 @@ public class ScoreManager : MonoBehaviour
             HighScoreMSG.SetActive(false);
         }
 
+        hungerLost = score / 2;
+        cleanlineLost = score / 3;
+        sanityGained = score / 4;
+
         SaveManager.Instance.SetHunger(SaveManager.Instance.GetHunger() - hungerLost);
+        Debug.Log("New Hunger:" + SaveManager.Instance.GetHunger());
         SaveManager.Instance.SetCleanliness(SaveManager.Instance.GetCleanliness() - cleanlineLost);
+        Debug.Log("New CLeanliness:" + SaveManager.Instance.GetCleanliness());
         SaveManager.Instance.SetSanity(SaveManager.Instance.GetSanity() + sanityGained);
-        SaveManager.Instance.AddExperience(score / scoreDividerForExp);
+        Debug.Log("New Sanity:" + SaveManager.Instance.GetSanity());
+        //SaveManager.Instance.AddExperience(cleanlineLost);
+        //Debug.Log("New Exp Gained:" + SaveManager.Instance.GetPlayerExperience());
+
+        
+        if (sanityText != null)
+        {
+            sanityText.text = $"+{sanityGained}%";
+        }
+        if (cleanlinessText != null)
+        {
+            cleanlinessText.text = $"-{cleanlineLost}%";
+        }
+        if (hungerText != null)
+        {
+            hungerText.text = $"-{hungerLost}%";
+        }
+        if (finalScoreText != null)
+            finalScoreText.text = $"Score: {score}";
     }
 
     private void CalculateSanityGained()
     {
-        sanityGained = (int)(survivalTime / 5) * 1;
+        // sanityGained = (int)(survivalTime / 5) * 1;
     }
 
-    public int GetSanityGained()
-    {
-        return sanityGained;
-    }
-
-    public void AddScore(int points)
-    {
-        score += points;
-        UpdateScoreText();
-    }
-
-    private void UpdateScoreText()
+    //public int GetSanityGained()
+    //{
+    //    return sanityGained;
+    //}
+    public void UpdateScoreText()
     {
         if (scoreText != null)
         {
@@ -151,33 +173,10 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    private void DisplaySanityGained()
+    public void AddScore(int points)
     {
-        if (sanityText != null)
-        {
-            sanityText.text = $"+{sanityGained}%";
-        }
-    }
-    private void DisplayHungerLost()
-    {
-        if (hungerText != null)
-        {
-            hungerText.text = $"{hungerLost}%";
-        }
-    }
-    
-    private void DisplayFinalScore()
-    {
-        if (finalScoreText != null)
-            finalScoreText.text = $"Score: {score}";
-    }
-
-    private void DisplayCleanlinessLost()
-    {
-        if (cleanlinessText != null)
-        {
-            cleanlinessText.text = $"{cleanlineLost}%";
-        }
+        score += points;
+        UpdateScoreText();
     }
 
     private void DisableGhosts()

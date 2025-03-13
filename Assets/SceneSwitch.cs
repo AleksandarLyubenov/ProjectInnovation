@@ -15,9 +15,9 @@ public class SceneSwitch : MonoBehaviour
 
     public void Back2MenuButton()
     {
-        int sanityGained = scoreManager.GetSanityGained();
+        // int sanityGained = scoreManager.GetSanityGained();
         // Add sanityGained to another value in this script as needed
-        Debug.Log($"Sanity Gained: {sanityGained}");
+        // Debug.Log($"Sanity Gained: {sanityGained}");
         SceneManager.LoadScene(DirectedScene);
     }
 }
