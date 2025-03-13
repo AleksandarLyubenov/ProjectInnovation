@@ -862,10 +862,10 @@ MonoBehaviour:
   - {fileID: 1282557063071414201, guid: 21fced5bdf174254d8ffdd96a5e347bb, type: 3}
   enemyGhosts:
   - {fileID: 5891609429769130800, guid: 1bbd2552226926e4da1cbb8e06684160, type: 3}
-  isRadialSpawnEnabled: 0
+  isRadialSpawnEnabled: 1
   passiveGhostsAmount: 1
   enemyGhostsAmount: 1
-  spawnRadialRadius: 10
+  spawnRadialRadius: 6
   spawnWidth: 8
   spawnHeight: 3.25
   minSeparation: 2
@@ -2015,10 +2015,9 @@ MonoBehaviour:
   flashlight: {fileID: 90577863}
   handPointer: {fileID: 278823969}
   hubSceneName: Aleksander's Scene
-  hungerModulo: 7
-  cleanlinessModulo: 5
-  sanityMultiplier: 1.5
-  energyDeduction: 3
+  hungerPerGhost: 3
+  cleanlinessPerGhost: 2
+  sanityPerGhost: 1
 --- !u!4 &1947190703
 Transform:
   m_ObjectHideFlags: 0

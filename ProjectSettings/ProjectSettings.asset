@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Team PD-3
-  productName: Cute GhostBusters
+  productName: Digital Silence
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -139,8 +139,11 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 0.1.0
-  preloadedAssets: []
+  bundleVersion: 0.9.0
+  preloadedAssets:
+  - {fileID: -4976316647940479047, guid: 0fd9f5646a9cc544fbe8114c5d7dfcd9, type: 2}
+  - {fileID: 11400000, guid: 6a47b038f9a0eb541a6990a95deec4a1, type: 2}
+  - {fileID: 11400000, guid: 694b63a8484d04a4d9e96d62e5254bc2, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -161,7 +164,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.TeamPD3.CuteGhostBusters
+    Android: com.TeamPD3.DigitalSilence
   buildNumber:
     Standalone: 0
     VisionOS: 0

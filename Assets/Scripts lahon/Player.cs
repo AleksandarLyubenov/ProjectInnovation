@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject alivePlayer;
     [SerializeField] private GameObject deadPlayer;
 
+    [SerializeField] private GameObject windowGhost;
+
     [SerializeField] private string switchSceneTo;
 
 
@@ -54,6 +56,7 @@ public class Player : MonoBehaviour
             gameIsOver = true;
             GameOverPanel.SetActive(true);
             livesAndScorePanel.SetActive(false);
+            windowGhost.SetActive(false);
             DisableGhosts();
             DisableDrawing();
 
