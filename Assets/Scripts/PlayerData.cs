@@ -10,6 +10,7 @@ public class PlayerData
     public int cleanliness = 100;
     public int energy = 100;
     public int hunger = 100;
+    public int playerExp = 0;
     public int minigame1HighScore = 0;
     public int minigame2HighScore = 0;
     public string equippedCosmetic = "Hat_1";
@@ -22,6 +23,7 @@ public class PlayerData
         cleanliness = 50;
         energy = 6;
         hunger = 50;
+        playerExp = 0;
         minigame1HighScore = 0;
         minigame2HighScore = 0;
         equippedCosmetic = "Hat_1";

@@ -89,6 +89,8 @@ public class GameOverHandler : MonoBehaviour
             SaveManager.Instance.SetMinigame2HighScore(finalScore);
         }
 
+        SaveManager.Instance.AddExperience(finalScore);
+
         panel.SetActive(true);
         Debug.Log("Results panel activated");
     }

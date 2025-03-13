@@ -15,6 +15,7 @@ public class SaveManager : MonoBehaviour
     public event Action OnEnergyChanged;
     public event Action OnCleanlinessChanged;
     public event Action OnHungerChanged;
+    public event Action OnLevelUp;
 
     [Header("Debug")]
     [SerializeField] private bool debugMode = true;
@@ -155,6 +156,50 @@ public class SaveManager : MonoBehaviour
     public void SetPlayerLevel(int level)
     {
         playerData.playerLevel = level;
+        SaveData();
+    }
+    public void AddExperience(int exp)
+    {
+        playerData.playerExp += exp;
+        CheckLevelUp();
+        SaveData();
+    }
+
+    private void CheckLevelUp()
+    {
+        int maxPossibleLevel = playerData.playerLevel;
+        while (true)
+        {
+            int expRequiredForNextLevel = GetRequiredExpForLevel(maxPossibleLevel + 1);
+            if (playerData.playerExp >= expRequiredForNextLevel)
+            {
+                maxPossibleLevel++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (maxPossibleLevel > playerData.playerLevel)
+        {
+            playerData.playerLevel = maxPossibleLevel;
+            Debug.Log($"Player leveled up to {playerData.playerLevel}");
+            OnLevelUp?.Invoke();
+        }
+    }
+
+    private int GetRequiredExpForLevel(int level)
+    {
+        if (level <= 1)
+            return 0;
+        return 5 * (int)Mathf.Pow(2, level - 2);
+    }
+
+    public int GetPlayerExperience() => playerData.playerExp;
+    public void SetPlayerExperience(int exp)
+    {
+        playerData.playerExp = exp;
         SaveData();
     }
 

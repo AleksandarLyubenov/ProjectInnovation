@@ -9,7 +9,7 @@ public class StatsUIHandler : MonoBehaviour
     [SerializeField] private GameObject statsPanel;
     [SerializeField] private GameObject sidePanel;
 
-    [SerializeField] private TMP_Text levelText;
+    // [SerializeField] private TMP_Text levelText;
     [SerializeField] private TMP_Text energyText;
     [SerializeField] private TMP_Text cleanlinessText;
     [SerializeField] private TMP_Text hungerText;
@@ -93,18 +93,18 @@ public class StatsUIHandler : MonoBehaviour
 
     private void UpdateAllStats()
     {
-        UpdateLevel();
+        //UpdateLevel();
         UpdateEnergy();
         UpdateCleanliness();
         UpdateHunger();
         UpdateSanity();
     }
 
-    private void UpdateLevel()
-    {
-        int level = SaveManager.Instance.GetPlayerLevel();
-        levelText.text = $"Level {level}";
-    }
+    //private void UpdateLevel()
+    //{
+    //    int level = SaveManager.Instance.GetPlayerLevel();
+    //    levelText.text = $"Level {level}";
+    //}
 
     private void UpdateEnergy()
     {

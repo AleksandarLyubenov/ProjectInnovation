@@ -4257,7 +4257,6 @@ MonoBehaviour:
   circleZPosition: -5
   player: {fileID: 0}
   hasPlayerReference: 0
-  audioManager: {fileID: 0}
 --- !u!4 &1181274974
 Transform:
   m_ObjectHideFlags: 0
