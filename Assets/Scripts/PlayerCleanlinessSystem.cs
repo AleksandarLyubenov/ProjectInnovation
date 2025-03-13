@@ -23,7 +23,7 @@ public class PlayerDirtSystem : MonoBehaviour
 
     private void Start()
     {
-        //Debug.Log("[DirtSystem] Initializing dirt system...");
+        Debug.Log("[DirtSystem] Initializing dirt system...");
         InitializeDirt();
         InitializeMicrophone();
     }
@@ -32,13 +32,13 @@ public class PlayerDirtSystem : MonoBehaviour
     {
         if (dirtImage == null)
         {
-            //Debug.LogError("[DirtSystem] Missing dirt image reference!");
+            Debug.LogError("[DirtSystem] Missing dirt image reference!");
             return;
         }
 
         originalDirtColor = dirtImage.color;
         UpdateDirtAlpha();
-        //Debug.Log($"[DirtSystem] Initial dirt alpha: {originalDirtColor.a}");
+        Debug.Log($"[DirtSystem] Initial dirt alpha: {originalDirtColor.a}");
     }
 
     void InitializeMicrophone()
@@ -47,35 +47,12 @@ public class PlayerDirtSystem : MonoBehaviour
         {
             isMicrophoneConnected = true;
             microphoneInput = Microphone.Start(null, true, 1, AudioSettings.outputSampleRate);
-            //Debug.Log("[DirtSystem] Microphone initialized successfully");
+            Debug.Log("[DirtSystem] Microphone initialized successfully");
         }
         else
         {
-            //Debug.LogWarning("[DirtSystem] No microphone detected - cleaning disabled");
+            Debug.LogWarning("[DirtSystem] No microphone detected - cleaning disabled");
         }
-    }
-
-    private void Update()
-    {
-        if (isMicrophoneConnected)
-        {
-            float loudness = GetMicrophoneLoudness();
-            //Debug.Log($"[DirtSystem] Current mic loudness: {loudness.ToString("F2")}");
-
-            if (IsBlowingDetected())
-            {
-                //Debug.Log("[DirtSystem] Blowing detected!");
-                cleaningTimer += Time.deltaTime;
-                CleanPlayer();
-            }
-            else
-            {
-                cleaningTimer = Mathf.Max(0, cleaningTimer - Time.deltaTime);
-            }
-        }
-
-        //UpdateProgressUI();
-        UpdateDirtAlpha();
     }
 
     bool IsBlowingDetected()
@@ -92,11 +69,11 @@ public class PlayerDirtSystem : MonoBehaviour
             currentCleanliness = Mathf.Clamp(currentCleanliness, 0, 100);
             SaveManager.Instance.SetCleanliness(currentCleanliness);
 
-            //Debug.Log($"[DirtSystem] Cleaning progress: {currentCleanliness}%");
+            Debug.Log($"[DirtSystem] Cleaning progress: {currentCleanliness}%");
 
             if (currentCleanliness >= 100)
             {
-                //Debug.Log("[DirtSystem] Player fully cleaned!");
+                Debug.Log("[DirtSystem] Player fully cleaned!");
             }
         }
     }
@@ -120,6 +97,27 @@ public class PlayerDirtSystem : MonoBehaviour
         float peak = 0;
         foreach (var sample in waveData) peak = Mathf.Max(peak, Mathf.Abs(sample));
         return peak;
+    }
+
+    private void Update()
+    {
+        if (isMicrophoneConnected)
+        {
+            float loudness = GetMicrophoneLoudness();
+            Debug.Log($"[DirtSystem] Current mic loudness: {loudness.ToString("F2")}");
+
+            if (IsBlowingDetected())
+            {
+                cleaningTimer += Time.deltaTime;
+                CleanPlayer();
+            }
+            else
+            {
+                cleaningTimer = Mathf.Max(0, cleaningTimer - Time.deltaTime);
+            }
+        }
+
+        UpdateDirtAlpha();
     }
 
     //void UpdateProgressUI()

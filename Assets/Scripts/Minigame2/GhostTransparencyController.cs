@@ -6,6 +6,9 @@ public class GhostTransparencyController : MonoBehaviour
     [SerializeField] private Renderer objectRenderer;
     public bool isPassive;
 
+    [Header("Vibration Settings")]
+    [SerializeField] private float vibrationDistanceDivisor = 1.5f;
+
     [HideInInspector] public float currentAlpha = 0f;
     private Vector3 originalPosition;
     private bool isRegistered = false;
@@ -33,14 +36,15 @@ public class GhostTransparencyController : MonoBehaviour
 
     void UpdateVibrationRegistration()
     {
-        bool isActive = currentAlpha >= 0.5f;
+        // Always register hostile ghosts, but only when visible
+        bool shouldRegister = currentAlpha >= 0.1f && !isPassive;
 
-        if (isActive && !isRegistered)
+        if (shouldRegister && !isRegistered)
         {
             VibrationManager.Instance.RegisterActiveGhost(this);
             isRegistered = true;
         }
-        else if (!isActive && isRegistered)
+        else if (!shouldRegister && isRegistered)
         {
             VibrationManager.Instance.UnregisterActiveGhost(this);
             isRegistered = false;
@@ -55,13 +59,23 @@ public class GhostTransparencyController : MonoBehaviour
         Vector3 flashlightPosition = new Vector3(FlashlightController.Instance.transform.position.x, FlashlightController.Instance.transform.position.y, 0f);
 
         float distance = Vector3.Distance(ghostPosition, flashlightPosition);
-        currentAlpha = Mathf.Clamp01(1 - distance / 6f);
+        // Reduce divisor from 6f to 4f to shorten detection range
+        currentAlpha = Mathf.Clamp01(1 - distance / vibrationDistanceDivisor);
 
         if (objectRenderer.material.HasProperty("_Color"))
         {
             Color color = objectRenderer.material.color;
             color.a = currentAlpha;
             objectRenderer.material.color = color;
+        }
+    }
+
+    // Add cleanup when destroyed
+    private void OnDestroy()
+    {
+        if (isRegistered)
+        {
+            VibrationManager.Instance.UnregisterActiveGhost(this);
         }
     }
 

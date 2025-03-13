@@ -35,11 +35,11 @@ public class CirclesManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private bool hasPlayerReference;
 
-    [SerializeField] private AudioManager audioManager;
+    // [SerializeField] private AudioManager audioManager;
 
     void Start()
     {
-        audioManager = FindAnyObjectByType<AudioManager>();
+        // audioManager = FindAnyObjectByType<AudioManager>();
         resultPanel.SetActive(false);
         closeButton.onClick.AddListener(CloseResultPanel);
     }
@@ -112,11 +112,11 @@ public class CirclesManager : MonoBehaviour
         if (success)
         {
             successfulHits++;
-            audioManager.PlaySound("Eat");
+            AudioManager.Instance.PlaySound("Eat");
         }
         else
         {
-            audioManager.PlaySound("EatFail");
+            AudioManager.Instance.PlaySound("EatFail");
         }
 
         circlesRemaining--;
@@ -230,7 +230,7 @@ public class CirclesManager : MonoBehaviour
     void ShowResultPanel()
     {
         contextText.text = $"You restored {hungerIncrease}% hunger!";
-        audioManager.PlaySound("Popup");
+        AudioManager.Instance.PlaySound("Popup");
         resultPanel.SetActive(true);
         resultPanel.GetComponent<PanelAnimator>().ShowPanel();
     }

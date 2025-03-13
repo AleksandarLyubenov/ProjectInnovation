@@ -12,16 +12,14 @@ public class AudioManager : MonoBehaviour
     private void Awake()
     {
         // Singleton pattern
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -54,6 +52,12 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(string soundName)
     {
+        if (audioSource == null)
+        {
+            Debug.LogError("AudioSource not initialized!");
+            return;
+        }
+
         foreach (AudioClip clip in soundEffects)
         {
             if (clip.name == soundName)
@@ -63,5 +67,13 @@ public class AudioManager : MonoBehaviour
             }
         }
         Debug.LogWarning($"Sound '{soundName}' not found!");
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 }
