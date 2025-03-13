@@ -572,7 +572,7 @@ MonoBehaviour:
   dirtImage: {fileID: 1092500077942794432}
   maxDirtAlpha: 0.9
   blowThreshold: 0.1
-  blowDuration: 3
+  blowDuration: 1
   cleanlinessPerSecond: 33
 --- !u!114 &744252379415253879
 MonoBehaviour:

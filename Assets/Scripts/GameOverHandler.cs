@@ -37,10 +37,9 @@ public class GameOverHandler : MonoBehaviour
     public string hubSceneName = "Aleksaner's Scene";
 
     [Header("Gameplay Settings")]
-    public float hungerModulo = 7f;
-    public float cleanlinessModulo = 5f;
-    public float sanityMultiplier = 1.5f;
-    public int energyDeduction = 3;
+    public int hungerPerGhost = 3;
+    public int cleanlinessPerGhost = 2;
+    public int sanityPerGhost = 1;
 
     private float startTime;
     private bool gameActive = true;
@@ -67,27 +66,30 @@ public class GameOverHandler : MonoBehaviour
         float timeElapsed = spawnHandler.GetPlayTime();
         bool isNewHighScore = finalScore > SaveManager.Instance.GetMinigame2HighScore();
 
-        int hungerLoss = Mathf.RoundToInt(timeElapsed % hungerModulo);
-        int cleanlinessLoss = Mathf.RoundToInt(timeElapsed % cleanlinessModulo);
-        int sanityGain = Mathf.RoundToInt(timeElapsed * sanityMultiplier);
-        int energyLoss = energyDeduction;
+        int hungerLoss = finalScore * hungerPerGhost;
+        int cleanlinessLoss = finalScore * cleanlinessPerGhost;
+        int sanityGain = finalScore * sanityPerGhost;
+        //int energyLoss = energyDeduction;
 
         SaveManager.Instance.SetHunger(SaveManager.Instance.GetHunger() - hungerLoss);
         SaveManager.Instance.SetCleanliness(SaveManager.Instance.GetCleanliness() - cleanlinessLoss);
         SaveManager.Instance.SetSanity(SaveManager.Instance.GetSanity() + sanityGain);
-        SaveManager.Instance.SetEnergy(SaveManager.Instance.GetEnergy() - energyLoss);
+        //SaveManager.Instance.SetEnergy(SaveManager.Instance.GetEnergy() - energyLoss);
 
-        energyLostText.text = $"-{energyLoss}";
+        //energyLostText.text = $"-{energyLoss}";
+        energyLostText.text = $"-3";
         hungerLostText.text = $"-{hungerLoss}%";
         cleanlinessLostText.text = $"-{cleanlinessLoss}%";
         sanityGainedText.text = $"+{sanityGain}%";
-        scoreText.text = finalScore.ToString();
+        scoreText.text = $"SCORE: " + finalScore.ToString();
         newHighScoreAnnouncement.SetActive(isNewHighScore);
 
         if (isNewHighScore)
         {
             SaveManager.Instance.SetMinigame2HighScore(finalScore);
         }
+
+        SaveManager.Instance.AddExperience(finalScore);
 
         panel.SetActive(true);
         Debug.Log("Results panel activated");

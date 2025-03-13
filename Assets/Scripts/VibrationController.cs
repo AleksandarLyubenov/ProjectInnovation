@@ -25,14 +25,12 @@ public class VibrationManager : MonoBehaviour
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Clear ghosts when new scene loads
         activeGhosts.Clear();
         StopVibration();
     }
 
     void InitializeVibrator()
     {
-        // Add null check for Android initialization
         if (Application.platform != RuntimePlatform.Android) return;
 
         try
@@ -76,15 +74,15 @@ public class VibrationManager : MonoBehaviour
     {
         if (!hasVibratePermission || vibrator == null) return;
 
-        GhostTransparencyController dominantGhost = GetDominantGhost();
+        activeGhosts.RemoveAll(g => g == null);
 
-        if (dominantGhost != null)
+        var hostileGhosts = activeGhosts.Where(g => !g.isPassive).ToList();
+
+        if (hostileGhosts.Count > 0)
         {
-            float vibrationStrength = Mathf.Lerp(50, 255, dominantGhost.currentAlpha);
-            if (dominantGhost.isPassive)
-                StartPulsatingVibration(vibrationStrength);
-            else
-                StartConstantVibration((int)vibrationStrength);
+            var closestGhost = hostileGhosts.OrderByDescending(g => g.currentAlpha).First();
+            float vibrationStrength = Mathf.Lerp(50, 255, closestGhost.currentAlpha);
+            StartProximityVibration(vibrationStrength);
         }
         else
         {
@@ -92,31 +90,33 @@ public class VibrationManager : MonoBehaviour
         }
     }
 
-    GhostTransparencyController GetDominantGhost()
+    void StartProximityVibration(float strength)
     {
-        GhostTransparencyController dominant = null;
-        float maxAlpha = 0.5f;
-        bool hasEnemy = activeGhosts.Exists(g => !g.isPassive);
+        int amplitude = Mathf.Clamp((int)strength, 1, 255);
 
-        // Debug: Log all active ghosts
-        Debug.Log($"Active ghosts: {activeGhosts.Count} (Enemies: {activeGhosts.Count(g => !g.isPassive)})");
+        long vibrateDuration = 100;
+        long pauseDuration = (long)Mathf.Lerp(500, 50, strength / 255f);
+        long[] pattern = { 0, vibrateDuration, pauseDuration };
 
-        foreach (var ghost in activeGhosts)
+        if (GetAndroidSDKVersion() >= 26)
         {
-            // Debug individual ghost status
-            Debug.Log($"Ghost: {ghost.name} | Passive: {ghost.isPassive} | Alpha: {ghost.currentAlpha}");
-
-            if (hasEnemy && ghost.isPassive) continue;
-
-            if (ghost.currentAlpha > maxAlpha)
+            using (AndroidJavaClass vibrationEffectClass = new AndroidJavaClass("android.os.VibrationEffect"))
             {
-                maxAlpha = ghost.currentAlpha;
-                dominant = ghost;
+                AndroidJavaObject effect = vibrationEffectClass.CallStatic<AndroidJavaObject>(
+                    "createWaveform", pattern, new int[] { 0, amplitude, 0 }, -1
+                );
+                vibrator.Call("vibrate", effect);
             }
         }
+        else
+        {
+            vibrator.Call("vibrate", pattern, -1);
+        }
+    }
 
-        Debug.Log($"Dominant ghost: {(dominant != null ? dominant.name : "None")}");
-        return dominant;
+    GhostTransparencyController GetDominantGhost()
+    {
+        return activeGhosts.FirstOrDefault(g => !g.isPassive);
     }
 
     void StartPulsatingVibration(float strength)
@@ -132,11 +132,13 @@ public class VibrationManager : MonoBehaviour
                 AndroidJavaObject effect = vibrationEffectClass.CallStatic<AndroidJavaObject>(
                     "createWaveform", pattern, -1);
                 vibrator.Call("vibrate", effect);
+                Debug.Log("Vibrating!");
             }
         }
         else
         {
             vibrator.Call("vibrate", pattern, -1);
+            Debug.Log("Not vibrating!");
         }
     }
 
@@ -183,7 +185,14 @@ public class VibrationManager : MonoBehaviour
 
     public void StopVibration()
     {
-        if (vibrator != null)
-            vibrator.Call("cancel");
+        try
+        {
+            if (vibrator != null)
+                vibrator.Call("cancel");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Vibration stop failed: " + e.Message);
+        }
     }
 }
