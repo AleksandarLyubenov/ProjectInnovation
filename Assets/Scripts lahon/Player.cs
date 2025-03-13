@@ -7,6 +7,9 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private GameObject GameOverPanel;
     [SerializeField] private string switchSceneTo;
+
+    [HideInInspector] public bool gameIsOver;
+
     private int health;
 
     private GhostMoveToPlayer[] ghosts;
@@ -15,6 +18,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameIsOver = false;
         GameOverPanel.SetActive(false);
         health = 5;
         ghosts = FindObjectsOfType<GhostMoveToPlayer>();
@@ -39,6 +43,7 @@ public class Player : MonoBehaviour
             GameOverPanel.SetActive(true);
             DisableGhosts();
             DisableDrawing();
+            gameIsOver = true;
         }
     }
 

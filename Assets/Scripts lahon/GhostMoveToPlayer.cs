@@ -22,6 +22,7 @@ public class GhostMoveToPlayer : MonoBehaviour
 
     public bool isSpawned = true;
     private bool isGameOver = false;
+    private float speed = 1.5f;
 
     public void Start()
     {
@@ -50,13 +51,13 @@ public class GhostMoveToPlayer : MonoBehaviour
             ghostPos = transform.position;
             targetPos = target.transform.position;
 
-            // ghost pos - t (B - A)
+            // ghost pos - target pos (B - A)
             directionG2T = ghostPos - targetPos;
             // normalize for consistent speed
             directionG2T.Normalize();
 
             // apply to position
-            transform.position -= (Vector3)directionG2T * 1.5f * Time.deltaTime;
+            transform.position -= (Vector3)directionG2T * speed * Time.deltaTime;
         }
     }
 
@@ -96,6 +97,11 @@ public class GhostMoveToPlayer : MonoBehaviour
     public void StopMovement()
     {
         isGameOver = true;
+    }
+
+    public void SetSpeed(float newSpeed)
+    {
+        speed = newSpeed;
     }
 
     private IEnumerator RespawnGhost(float delay)

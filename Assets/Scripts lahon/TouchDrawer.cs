@@ -12,6 +12,12 @@ public class TouchDrawer : MonoBehaviour
 
     public LayerMask lineLayerMask;
     private bool isGameOver = false;
+    private ScoreManager scoreManager;
+
+    private void Start()
+    {
+        scoreManager = FindObjectOfType<ScoreManager>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -70,6 +76,7 @@ public class TouchDrawer : MonoBehaviour
                         {
                             ghostScript.isSpawned = false; // Call the DisableGhost method
                             ghostScript.DisableGhost(); // Disable the ghost
+                            scoreManager.AddScore(1); // Add score for catching the ghost
                         }
                     }
                 }

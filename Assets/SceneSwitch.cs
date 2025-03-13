@@ -6,12 +6,18 @@ using UnityEngine.SceneManagement;
 public class SceneSwitch : MonoBehaviour
 {
     [SerializeField] private string DirectedScene;
+    private ScoreManager scoreManager;
 
- /*   int currentEnergy = SaveManager.Instance.GetEnergy();
-    int currentLevel = SaveManager.Instance.GetPlayerLevel();*/
+    private void Start()
+    {
+        scoreManager = FindObjectOfType<ScoreManager>();
+    }
 
     public void Back2MenuButton()
     {
+        int sanityGained = scoreManager.GetSanityGained();
+        // Add sanityGained to another value in this script as needed
+        Debug.Log($"Sanity Gained: {sanityGained}");
         SceneManager.LoadScene(DirectedScene);
     }
 }

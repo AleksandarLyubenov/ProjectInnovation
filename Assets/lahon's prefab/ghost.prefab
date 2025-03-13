@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7231448625294783931}
   - component: {fileID: 2552741310825071646}
   - component: {fileID: 5406949049334218211}
+  - component: {fileID: 345775598103162521}
   m_Layer: 7
   m_Name: ghost
   m_TagString: Ghost
@@ -89,7 +90,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 25, y: 25}
+    oldSize: {x: 7.2, y: 7.2}
     newSize: {x: 25, y: 25}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -166,7 +167,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b8e197edfb6ef504a990c28bc74677e7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 82afeeb544cf32148ac5f3eade0d46b9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -191,3 +192,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 0
   enemyColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!95 &345775598103162521
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8628966220789525503}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cde132a5303f0574fb5d3bcf9cebb217, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
