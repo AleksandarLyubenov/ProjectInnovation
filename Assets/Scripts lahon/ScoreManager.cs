@@ -13,6 +13,7 @@ public class ScoreManager : MonoBehaviour
 
     private int score = 0;
     private int sanityGained = -5;
+    [SerializeField] private int scoreDividerForExp = 5;
 
     private int hungerLost = -1;
     private int cleanlineLost = -2;
@@ -95,6 +96,7 @@ public class ScoreManager : MonoBehaviour
         SaveManager.Instance.SetHunger(SaveManager.Instance.GetHunger() - hungerLost);
         SaveManager.Instance.SetCleanliness(SaveManager.Instance.GetCleanliness() - cleanlineLost);
         SaveManager.Instance.SetSanity(SaveManager.Instance.GetSanity() + sanityGained);
+        SaveManager.Instance.AddExperience(score / scoreDividerForExp);
     }
 
     private void CalculateSanityGained()
