@@ -1,7 +1,3 @@
 During this group project, we researched interesting/unique ways of interacting with a game. We settled on using an android phone and it's NFC reader (for amiibo-inspired scanning of new characters or outfits), vibration motor (for feedback), gyroscope (for screen control), microphone (for input/cleaning the hero). There are 2 minigames (ghost hunt and ghost capture) and 2 microgames (cleaning and eating)
 
-During the course of this project, I created most of the basic framework, as I was more familiar with android development than the other engineer. Afterwards, I focused my attention on introducing NFC characters, making my own library for the job, as the only public one, compatable with Unity was outdated and did not 'reset' the NFC reader, meaning it could only scan ONCE per app install/cache wipe. Other things that I managed to create were the vibration controller, microphone input detection, character customization, scene switching logic, data persistence (as in you can close the app and all progress/stats would be saved) and food mechanic.
-
-On the communication front, during this project our team experienced major burnout due to make-up exams (mainly within the artists) and personal life issues (the second engineer). Despite these problems, we all managed to communicate clearly and manage time constraint issues that came up suddenly (for example, reducing the work load on a person who had an emergency and re-distributing their tasks to the rest).
-
-Video: https://drive.google.com/file/d/1oE0OGyRLZaj19IhbnTERDCHe1fCU6mwB/view?usp=sharing
+Showcase Video: https://drive.google.com/file/d/1oE0OGyRLZaj19IhbnTERDCHe1fCU6mwB/view?usp=sharing
